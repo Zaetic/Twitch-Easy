@@ -1,0 +1,7 @@
+.vscode
+.git
+.eslintrc.json
+.src
+node_modules/
+package-lock.json
+images/
