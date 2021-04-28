@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-class TwitchAPI {
+export class TwitchAPI {
     private CLIENT_ID: string;
     private CLIENT_SECRET: string;
     private twitchAouth2: string;
@@ -83,5 +83,3 @@ class TwitchAPI {
         return streamer.data[0];
     }
 }
-
-module.exports = TwitchAPI;

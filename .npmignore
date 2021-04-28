@@ -1,7 +1,7 @@
 .vscode
 .git
 .eslintrc.json
-.src
+src/
 node_modules/
 package-lock.json
 images/

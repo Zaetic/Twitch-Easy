@@ -4,7 +4,9 @@
   "description": "Easy twitch api wrapper",
   "main": "lib/index.js",
   "types": "lib",
-  "scripts": {},
+  "scripts": {
+    "build": "tsc -p ."
+  },
   "author": {
     "name": "João Gabriel",
     "url": "https://github.com/Zaetic"
@@ -15,7 +17,7 @@
   },
   "devDependencies": {
     "@types/node": "^14.14.16",
-    "@types/node-fetch": "^2.5.7",
+    "@types/node-fetch": "^2.5.10",
     "@typescript-eslint/eslint-plugin": "^4.11.0",
     "@typescript-eslint/parser": "^4.11.0",
     "eslint": "^7.16.0",

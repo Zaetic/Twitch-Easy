@@ -1,1 +1,3 @@
-module.exports = require('./twitchAPI');
+import { TwitchAPI as core } from './twitchAPI';
+
+export default core;
