@@ -51,9 +51,10 @@ export class TwitchAPI {
         return true;
     }
 
-    public async getStreamers(name: string, quantity: number = 20) {
+    public async getStreamersByName(name: string, quantity: number = 20) {
+        if (!name) throw new Error('Name is null, pass a value');
         await this.getToken();
-        const url = `${this.twitch.GET_CHANNEL}?query=${name}&first=${quantity}`;
+        const url = `${this.twitch.GET_CHANNEL}?first=${quantity}&query=${name}`;
 
         const streamers = await fetch(url, {
             method: 'GET',
@@ -62,24 +63,39 @@ export class TwitchAPI {
                 'Client-ID': this.CLIENT_ID,
                 Authorization: `Bearer ${this.token.access_token}`,
             },
-        }).then((res) => res.json());
+        }).then((res) => {
+            if (res.status === 200) {
+                return res.json();
+            }
+            return null;
+        }).catch((err) => {
+            throw new Error(err);
+        });
 
         return streamers;
     }
 
-    public async getStreamerById(id: number) {
+    public async getStreamersById(id: number, quantity: number = 20) {
+        if (!id) throw new Error('ID is null, pass a value');
         await this.getToken();
-        const url = `${this.twitch.GET_STREAM}?first=1&user_id=${id}`;
+        const url = `${this.twitch.GET_STREAM}?first=${quantity}&user_id=${id}`;
 
-        const streamer = await fetch(url, {
+        const streamers = await fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Client-ID': this.CLIENT_ID,
                 Authorization: `Bearer ${this.token.access_token}`,
             },
-        }).then((res) => res.json());
+        }).then((res) => {
+            if (res.status === 200) {
+                return res.json();
+            }
+            return null;
+        }).catch((err) => {
+            throw new Error(err);
+        });
 
-        return streamer.data[0];
+        return streamers;
     }
 }
