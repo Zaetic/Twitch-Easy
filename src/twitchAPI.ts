@@ -51,11 +51,10 @@ export class TwitchAPI {
         return true;
     }
 
-    public async getStreamersByName(name: string, quantity: number = 20) {
+    public async getStreamersByName(name: string, quantity: number = 20, paginator?: string) {
         if (!name) throw new Error('Name is null, pass a value');
         await this.getToken();
-        const url = `${this.twitch.GET_CHANNEL}?first=${quantity}&query=${name}`;
-
+        const url = paginator ? `${this.twitch.GET_CHANNEL}?first=${quantity}&query=${name}&after=${paginator}` : `${this.twitch.GET_CHANNEL}?first=${quantity}&query=${name}`;
         const streamers = await fetch(url, {
             method: 'GET',
             headers: {
