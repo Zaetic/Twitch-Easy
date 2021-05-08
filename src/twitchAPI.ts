@@ -74,6 +74,32 @@ export class TwitchAPI {
         return streamers;
     }
 
+    public async getStreamerByName(name: string) {
+        if (!name) throw new Error('Name is null, pass a value');
+        await this.getToken();
+
+        let cursor = null;
+        let streamer = null;
+        let finish = false;
+        while (finish === false) {
+            let streamers;
+            if (!cursor) streamers = await this.getStreamersByName(name, 100);
+            else if (cursor) streamers = await this.getStreamersByName(name, 100, cursor);
+
+            if (!streamer) finish = true;
+            else {
+                const search = streamers.data.find((s: any) => s.display_name.toLowerCase() === name.toLowerCase());
+
+                if (search) {
+                    streamer = search;
+                    finish = true;
+                } else if (streamers.pagination.cursor) cursor = streamers.pagination.cursor;
+                else if (!streamers.pagination.cursor && !search) finish = true;
+            }
+        }
+        return streamer;
+    }
+
     public async getStreamersById(id: number, quantity: number = 20) {
         if (!id) throw new Error('ID is null, pass a value');
         await this.getToken();
