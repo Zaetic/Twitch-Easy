@@ -3,6 +3,7 @@
 </p>
 <p align="center">
     <a href="https://github.com/airbnb/javascript"><img src="https://img.shields.io/badge/Code--style-Airnb-red?logo=Airbnb&style=flat-square"></a>
+    <a href="https://prettier.io/"><img src="https://img.shields.io/badge/-Prettier-grey?logo=Prettier&style=flat-square"></a>
     <a href="https://www.npmjs.com/package/twitch-easy"><img src="https://img.shields.io/npm/v/twitch-easy?color=blue&logo=npm&style=flat-square"></a>
 </p>
 
