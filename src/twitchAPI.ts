@@ -78,9 +78,8 @@ export class TwitchAPI {
         return streamers;
     }
 
-    public async getStreamerByName(name: string): StreamerByName {
+    public async getStreamerByName(name: string): Promise<StreamerByName | null> {
         if (!name) throw new Error('Name is null, pass a value');
-        await this.getToken();
 
         let cursor: string | null = null;
         let streamer: StreamerByName | null = null;
@@ -93,7 +92,7 @@ export class TwitchAPI {
             if (!streamers) finish = true;
             else if (!streamer && cursor) finish = true;
             else {
-                const search = streamers.data.find((s: any) => s.display_name.toLowerCase() === name.toLowerCase());
+                const search = streamers.data.find((s) => s.display_name.toLowerCase() === name.toLowerCase());
                 if (search) {
                     streamer = search;
                     finish = true;
@@ -104,12 +103,13 @@ export class TwitchAPI {
         return streamer;
     }
 
-    public async getStreamersById(id: number, quantity: number = 20): Promise<StreamerSearchId | null> {
+    public async getStreamersOnline(id: string, quantity: number = 20, paginator?: string): Promise<StreamerSearchOnline | null> {
         if (!id) throw new Error('ID is null, pass a value');
         await this.getToken();
-        const url = `${this.twitch.GET_STREAM}?first=${quantity}&user_id=${id}`;
-
-        const streamers: StreamerSearchId = await fetch(url, {
+        const url = paginator
+            ? `${this.twitch.GET_STREAM}?first=${quantity}&user_id=${id}&after=${paginator}`
+            : `${this.twitch.GET_STREAM}?first=${quantity}&user_id=${id}`;
+        const streamers: StreamerSearchOnline = await fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -118,7 +118,7 @@ export class TwitchAPI {
             },
         })
             .then((res: Response) => {
-                if (res.status === 200) {
+                if (res.status === 200 && res.ok) {
                     return res.json();
                 }
                 return null;
@@ -126,7 +126,31 @@ export class TwitchAPI {
             .catch((err: Error) => {
                 throw new Error(err.message);
             });
-
         return streamers;
+    }
+
+    public async getStreamerOnline(id: string): Promise<StreamerOnline | null> {
+        if (!id) throw new Error('ID is null, pass a value');
+
+        let cursor: string | null = null;
+        let streamer: StreamerOnline | null = null;
+        let finish = false;
+        while (finish === false) {
+            let streamers: StreamerSearchOnline | null = null;
+            if (!cursor) streamers = await this.getStreamersOnline(id, 100);
+            else if (cursor) streamers = await this.getStreamersOnline(id, 100, cursor);
+
+            if (!streamers) finish = true;
+            else if (!streamer && cursor) finish = true;
+            else {
+                const search = streamers.data.find((s) => s.user_id.toString() === id.toLowerCase());
+                if (search) {
+                    streamer = search;
+                    finish = true;
+                } else if (streamers.pagination.cursor) cursor = streamers.pagination.cursor;
+                else if (!streamers.pagination.cursor && !search) finish = true;
+            }
+        }
+        return streamer;
     }
 }

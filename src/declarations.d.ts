@@ -25,7 +25,7 @@ declare type ChannelSearchName = {
     };
 };
 
-declare type StreamerById = {
+declare type StreamerOnline = {
     id: number;
     user_id: number;
     user_login: string;
@@ -42,8 +42,8 @@ declare type StreamerById = {
     is_mature: boolean;
 };
 
-declare type StreamerSearchId = {
-    data: StreamerById[];
+declare type StreamerSearchOnline = {
+    data: StreamerOnline[];
     pagination: {
         cursor?: string;
     };
