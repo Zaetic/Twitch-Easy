@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import fetch, { Response } from 'node-fetch';
 
 export class TwitchAPI {
     private CLIENT_ID: string;
@@ -31,7 +31,7 @@ export class TwitchAPI {
             grant_type: 'client_credentials',
         };
 
-        const token = await fetch(this.twitchAouth2, {
+        const token: Token = await fetch(this.twitchAouth2, {
             method: 'post',
             body: JSON.stringify(body),
             headers: { 'Content-type': 'application/json' },
@@ -51,13 +51,13 @@ export class TwitchAPI {
         return true;
     }
 
-    public async getStreamersByName(name: string, quantity: number = 20, paginator?: string) {
+    public async getStreamersByName(name: string, quantity: number = 20, paginator?: string): Promise<ChannelSearchName | null> {
         if (!name) throw new Error('Name is null, pass a value');
         await this.getToken();
         const url = paginator
             ? `${this.twitch.GET_CHANNEL}?first=${quantity}&query=${name}&after=${paginator}`
             : `${this.twitch.GET_CHANNEL}?first=${quantity}&query=${name}`;
-        const streamers = await fetch(url, {
+        const streamers: ChannelSearchName | null = await fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -65,35 +65,35 @@ export class TwitchAPI {
                 Authorization: `Bearer ${this.token.access_token}`,
             },
         })
-            .then((res) => {
-                if (res.status === 200) {
+            .then((res: Response) => {
+                if (res.status === 200 && res.ok) {
                     return res.json();
                 }
                 return null;
             })
-            .catch((err) => {
-                throw new Error(err);
+            .catch((err: Error) => {
+                throw new Error(err.message);
             });
 
         return streamers;
     }
 
-    public async getStreamerByName(name: string) {
+    public async getStreamerByName(name: string): StreamerByName {
         if (!name) throw new Error('Name is null, pass a value');
         await this.getToken();
 
-        let cursor = null;
-        let streamer = null;
+        let cursor: string | null = null;
+        let streamer: StreamerByName | null = null;
         let finish = false;
         while (finish === false) {
-            let streamers;
+            let streamers: ChannelSearchName | null = null;
             if (!cursor) streamers = await this.getStreamersByName(name, 100);
             else if (cursor) streamers = await this.getStreamersByName(name, 100, cursor);
 
-            if (!streamer) finish = true;
+            if (!streamers) finish = true;
+            else if (!streamer && cursor) finish = true;
             else {
                 const search = streamers.data.find((s: any) => s.display_name.toLowerCase() === name.toLowerCase());
-
                 if (search) {
                     streamer = search;
                     finish = true;
@@ -104,12 +104,12 @@ export class TwitchAPI {
         return streamer;
     }
 
-    public async getStreamersById(id: number, quantity: number = 20) {
+    public async getStreamersById(id: number, quantity: number = 20): Promise<StreamerSearchId | null> {
         if (!id) throw new Error('ID is null, pass a value');
         await this.getToken();
         const url = `${this.twitch.GET_STREAM}?first=${quantity}&user_id=${id}`;
 
-        const streamers = await fetch(url, {
+        const streamers: StreamerSearchId = await fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -117,14 +117,14 @@ export class TwitchAPI {
                 Authorization: `Bearer ${this.token.access_token}`,
             },
         })
-            .then((res) => {
+            .then((res: Response) => {
                 if (res.status === 200) {
                     return res.json();
                 }
                 return null;
             })
-            .catch((err) => {
-                throw new Error(err);
+            .catch((err: Error) => {
+                throw new Error(err.message);
             });
 
         return streamers;
