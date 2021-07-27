@@ -1,11 +1,11 @@
 import fetch, { Response } from 'node-fetch';
 
-export class TwitchAPI {
-    private CLIENT_ID: string;
-    private CLIENT_SECRET: string;
-    private twitchAouth2: string;
-    private token: { access_token: string; expires_in: number; time: number; token_type: string };
-    private twitch: { GET_CHANNEL: string; GET_STREAM: string };
+export = class TwitchAPI {
+    public CLIENT_ID: string;
+    public CLIENT_SECRET: string;
+    public twitchAouth2: string;
+    public token: { access_token: string; expires_in: number; time: number; token_type: string };
+    public twitch: { GET_CHANNEL: string; GET_STREAM: string };
 
     constructor(clientId: string, clientSecret: string) {
         this.CLIENT_ID = clientId;
@@ -23,7 +23,7 @@ export class TwitchAPI {
         };
     }
 
-    private async getToken(): Promise<void> {
+    public async getToken(): Promise<void> {
         if ((await this.checkToken()) === false) return;
         const body = {
             client_id: this.CLIENT_ID,
@@ -43,7 +43,7 @@ export class TwitchAPI {
         this.token.time = new Date().getTime();
     }
 
-    private async checkToken(): Promise<Boolean> {
+    public async checkToken(): Promise<Boolean> {
         const errorMargin = 1000;
         if (this.token.time + this.token.expires_in + errorMargin >= new Date().getTime()) {
             return false;
@@ -153,4 +153,4 @@ export class TwitchAPI {
         }
         return streamer;
     }
-}
+};
