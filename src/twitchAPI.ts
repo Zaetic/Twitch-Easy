@@ -1,9 +1,10 @@
 import fetch, { Response } from 'node-fetch';
 
-export = class TwitchAPI {
+export default class TwitchAPI {
     public CLIENT_ID: string;
     public CLIENT_SECRET: string;
     public twitchAouth2: string;
+    public ratelimit_reset?: Date | null;
     public token: { access_token: string; expires_in: number; time: number; token_type: string };
     public twitch: { GET_CHANNEL: string; GET_STREAM: string };
 
@@ -51,6 +52,11 @@ export = class TwitchAPI {
         return true;
     }
 
+    private updateRateReset(rate: string | null) {
+        if (!rate) return;
+        this.ratelimit_reset = new Date(parseInt(rate, 10) * 1000);
+    }
+
     public async getStreamersByName(name: string, quantity: number = 20, paginator?: string): Promise<ChannelSearchName | null> {
         if (!name) throw new Error('Name is null, pass a value');
         await this.getToken();
@@ -66,9 +72,15 @@ export = class TwitchAPI {
             },
         })
             .then((res: Response) => {
+                this.updateRateReset(res.headers.get('ratelimit-reset'));
+
                 if (res.status === 200 && res.ok) {
                     return res.json();
                 }
+                if (res.status === 429) {
+                    throw new Error(`Excess rate limit, will be reset at ${this.ratelimit_reset}`);
+                }
+
                 return null;
             })
             .catch((err: Error) => {
@@ -118,9 +130,16 @@ export = class TwitchAPI {
             },
         })
             .then((res: Response) => {
+                this.updateRateReset(res.headers.get('ratelimit-reset'));
+
                 if (res.status === 200 && res.ok) {
                     return res.json();
                 }
+
+                if (res.status === 429) {
+                    throw new Error(`Excess rate limit, will be reset at ${this.ratelimit_reset}`);
+                }
+
                 return null;
             })
             .catch((err: Error) => {
@@ -153,4 +172,4 @@ export = class TwitchAPI {
         }
         return streamer;
     }
-};
+}
