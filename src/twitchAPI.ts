@@ -2,12 +2,12 @@ import fetch, { Response } from 'node-fetch';
 import { ChannelSearchName, StreamerByName, StreamerOnline, StreamerSearchOnline, Token } from './declarations';
 
 export default class TwitchAPI {
-    public CLIENT_ID: string;
-    public CLIENT_SECRET: string;
-    public twitchAouth2: string;
-    public ratelimit_reset?: Date | null;
-    public token: { access_token: string; expires_in: number; time: number; token_type: string };
-    public twitch: { GET_CHANNEL: string; GET_STREAM: string };
+    private CLIENT_ID: string;
+    private CLIENT_SECRET: string;
+    private twitchAouth2: string;
+    private ratelimit_reset?: Date | null;
+    private token: { access_token: string; expires_in: number; time: number; token_type: string };
+    private twitch: { GET_CHANNEL: string; GET_STREAM: string };
 
     constructor(clientId: string, clientSecret: string) {
         this.CLIENT_ID = clientId;
@@ -58,7 +58,7 @@ export default class TwitchAPI {
         this.ratelimit_reset = new Date(parseInt(rate, 10) * 1000);
     }
 
-    public async getStreamersByName({
+    private async getStreamersByName({
         name,
         quantity = 20,
         paginator,
@@ -107,8 +107,8 @@ export default class TwitchAPI {
         let finish = false;
         while (finish === false) {
             let streamers: ChannelSearchName | null = null;
-            if (!cursor) streamers = await this.getStreamersByName(name, 100);
-            else if (cursor) streamers = await this.getStreamersByName(name, 100, cursor);
+            if (!cursor) streamers = await this.getStreamersByName({ name, quantity: 100 });
+            else if (cursor) streamers = await this.getStreamersByName({ name, quantity: 100, paginator: cursor });
 
             if (!streamers) finish = true;
             else if (!streamer && cursor) finish = true;
@@ -124,7 +124,7 @@ export default class TwitchAPI {
         return streamer;
     }
 
-    public async getStreamersOnline({
+    private async getStreamersOnline({
         id,
         quantity,
         paginator,
@@ -173,8 +173,8 @@ export default class TwitchAPI {
         let finish = false;
         while (finish === false) {
             let streamers: StreamerSearchOnline | null = null;
-            if (!cursor) streamers = await this.getStreamersOnline(id, 100);
-            else if (cursor) streamers = await this.getStreamersOnline(id, 100, cursor);
+            if (!cursor) streamers = await this.getStreamersOnline({ id, quantity: 100 });
+            else if (cursor) streamers = await this.getStreamersOnline({ id, quantity: 100, paginator: cursor });
 
             if (!streamers) finish = true;
             else if (!streamer && cursor) finish = true;
