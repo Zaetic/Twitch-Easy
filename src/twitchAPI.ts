@@ -1,4 +1,5 @@
 import fetch, { Response } from 'node-fetch';
+import { ChannelSearchName, StreamerByName, StreamerOnline, StreamerSearchOnline, Token } from './declarations';
 
 export default class TwitchAPI {
     public CLIENT_ID: string;

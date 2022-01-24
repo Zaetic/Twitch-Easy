@@ -1,10 +1,10 @@
-declare type Token = {
+export type Token = {
     access_token: string;
     expires_in: number;
     token_type: string;
 };
 
-declare type StreamerByName = {
+export type StreamerByName = {
     broadcaster_language: string;
     broadcaster_login: string;
     display_name: string;
@@ -18,14 +18,14 @@ declare type StreamerByName = {
     started_at: string;
 };
 
-declare type ChannelSearchName = {
+export type ChannelSearchName = {
     data: StreamerByName[];
     pagination: {
         cursor?: string;
     };
 };
 
-declare type StreamerOnline = {
+export type StreamerOnline = {
     id: number;
     user_id: number;
     user_login: string;
@@ -42,7 +42,7 @@ declare type StreamerOnline = {
     is_mature: boolean;
 };
 
-declare type StreamerSearchOnline = {
+export type StreamerSearchOnline = {
     data: StreamerOnline[];
     pagination: {
         cursor?: string;
