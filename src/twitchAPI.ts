@@ -58,7 +58,15 @@ export default class TwitchAPI {
         this.ratelimit_reset = new Date(parseInt(rate, 10) * 1000);
     }
 
-    public async getStreamersByName(name: string, quantity: number = 20, paginator?: string): Promise<ChannelSearchName | null> {
+    public async getStreamersByName({
+        name,
+        quantity = 20,
+        paginator,
+    }: {
+        name: string;
+        quantity: number;
+        paginator?: string;
+    }): Promise<ChannelSearchName | null> {
         if (!name) throw new Error('Name is null, pass a value');
         await this.getToken();
         const url = paginator
@@ -116,7 +124,15 @@ export default class TwitchAPI {
         return streamer;
     }
 
-    public async getStreamersOnline(id: string, quantity: number = 20, paginator?: string): Promise<StreamerSearchOnline | null> {
+    public async getStreamersOnline({
+        id,
+        quantity,
+        paginator,
+    }: {
+        id: string;
+        quantity: number;
+        paginator?: string;
+    }): Promise<StreamerSearchOnline | null> {
         if (!id) throw new Error('ID is null, pass a value');
         await this.getToken();
         const url = paginator
