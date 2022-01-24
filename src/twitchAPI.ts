@@ -1,22 +1,16 @@
 import fetch, { Response } from 'node-fetch';
 import { ChannelSearchName, StreamerByName, StreamerOnline, StreamerSearchOnline, Token } from './declarations';
+import { GET_CHANNEL, GET_STREAM, twitchAouth2 } from './defaults';
 
 export default class TwitchAPI {
     private CLIENT_ID: string;
     private CLIENT_SECRET: string;
-    private twitchAouth2: string;
     private ratelimit_reset?: Date | null;
     private token: { access_token: string; expires_in: number; time: number; token_type: string };
-    private twitch: { GET_CHANNEL: string; GET_STREAM: string };
 
     constructor(clientId: string, clientSecret: string) {
         this.CLIENT_ID = clientId;
         this.CLIENT_SECRET = clientSecret;
-        this.twitchAouth2 = 'https://id.twitch.tv/oauth2/token';
-        this.twitch = {
-            GET_CHANNEL: 'https://api.twitch.tv/helix/search/channels',
-            GET_STREAM: 'https://api.twitch.tv/helix/streams',
-        };
         this.token = {
             access_token: '',
             expires_in: 0,
@@ -33,7 +27,7 @@ export default class TwitchAPI {
             grant_type: 'client_credentials',
         };
 
-        const token: Token = await fetch(this.twitchAouth2, {
+        const token: Token = await fetch(twitchAouth2, {
             method: 'post',
             body: JSON.stringify(body),
             headers: { 'Content-type': 'application/json' },
@@ -70,8 +64,8 @@ export default class TwitchAPI {
         if (!name) throw new Error('Name is null, pass a value');
         await this.getToken();
         const url = paginator
-            ? `${this.twitch.GET_CHANNEL}?first=${quantity}&query=${name}&after=${paginator}`
-            : `${this.twitch.GET_CHANNEL}?first=${quantity}&query=${name}`;
+            ? `${GET_CHANNEL}?first=${quantity}&query=${name}&after=${paginator}`
+            : `${GET_CHANNEL}?first=${quantity}&query=${name}`;
         const streamers: ChannelSearchName | null = await fetch(url, {
             method: 'GET',
             headers: {
@@ -135,9 +129,7 @@ export default class TwitchAPI {
     }): Promise<StreamerSearchOnline | null> {
         if (!id) throw new Error('ID is null, pass a value');
         await this.getToken();
-        const url = paginator
-            ? `${this.twitch.GET_STREAM}?first=${quantity}&user_id=${id}&after=${paginator}`
-            : `${this.twitch.GET_STREAM}?first=${quantity}&user_id=${id}`;
+        const url = paginator ? `${GET_STREAM}?first=${quantity}&user_id=${id}&after=${paginator}` : `${GET_STREAM}?first=${quantity}&user_id=${id}`;
         const streamers: StreamerSearchOnline = await fetch(url, {
             method: 'GET',
             headers: {
