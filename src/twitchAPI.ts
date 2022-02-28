@@ -1,8 +1,8 @@
 import fetch, { Response } from 'node-fetch';
-import { ChannelSearchName, StreamerByName, StreamerOnline, StreamerSearchOnline, Token } from './declarations';
 import { GET_CHANNEL, GET_STREAM, twitchAouth2 } from './defaults';
+import { ITwitchAPI, ChannelSearchName, StreamerByName, StreamerOnline, StreamerSearchOnline, Token } from './types/twitchAPI';
 
-export default class TwitchAPI {
+export default class TwitchAPI implements ITwitchAPI {
     private CLIENT_ID: string;
     private CLIENT_SECRET: string;
     private ratelimit_reset?: Date | null;
@@ -50,7 +50,7 @@ export default class TwitchAPI {
         return true;
     }
 
-    private updateRateReset(rate: string | null) {
+    private updateRateReset(rate: string | null): void {
         if (!rate) return;
         this.ratelimit_reset = new Date(parseInt(rate, 10) * 1000);
     }
@@ -65,7 +65,7 @@ export default class TwitchAPI {
         return headers;
     }
 
-    private async getStreamersByName({
+    public async getStreamersByName({
         name,
         quantity = 20,
         paginator,
@@ -133,9 +133,9 @@ export default class TwitchAPI {
         return streamer;
     }
 
-    private async getStreamersOnline({
+    public async getStreamersOnline({
         id,
-        quantity,
+        quantity = 20,
         paginator,
     }: {
         id: string;
