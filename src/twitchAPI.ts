@@ -1,4 +1,4 @@
-import fetch, { Response } from 'node-fetch';
+import axios from 'axios';
 import { GET_CHANNEL, GET_STREAM, twitchAouth2 } from './defaults';
 import { ITwitchAPI, ChannelSearchName, StreamerByName, StreamerOnline, StreamerSearchOnline, Token } from './types/twitchAPI';
 
@@ -28,11 +28,12 @@ export default class TwitchAPI implements ITwitchAPI {
             grant_type: 'client_credentials',
         };
 
-        const token: Token = await fetch(twitchAouth2, {
+        const token: Token = await axios({
+            url: twitchAouth2,
             method: 'post',
-            body: JSON.stringify(body),
             headers: { 'Content-type': 'application/json' },
-        }).then((res) => res.json());
+            data: body,
+        }).then((res) => res.data);
 
         this.token.access_token = token.access_token;
         this.token.expires_in = token.expires_in;
@@ -82,15 +83,16 @@ export default class TwitchAPI implements ITwitchAPI {
             ? `${GET_CHANNEL}?first=${quantity}&query=${name}&after=${paginator}`
             : `${GET_CHANNEL}?first=${quantity}&query=${name}`;
 
-        const streamers: ChannelSearchName | null = await fetch(url, {
+        const streamers: ChannelSearchName | null = await axios({
+            url,
             method: 'GET',
             headers,
         })
-            .then((res: Response) => {
-                this.updateRateReset(res.headers.get('ratelimit-reset'));
+            .then((res) => {
+                this.updateRateReset(res.headers['ratelimit-reset']);
 
-                if (res.status === 200 && res.ok) {
-                    return res.json();
+                if (res.status === 200) {
+                    return res.data;
                 }
                 if (res.status === 429) {
                     throw new Error(`Excess rate limit, will be reset at ${this.ratelimit_reset}`);
@@ -148,15 +150,16 @@ export default class TwitchAPI implements ITwitchAPI {
 
         const url = paginator ? `${GET_STREAM}?first=${quantity}&user_id=${id}&after=${paginator}` : `${GET_STREAM}?first=${quantity}&user_id=${id}`;
 
-        const streamers: StreamerSearchOnline = await fetch(url, {
+        const streamers: StreamerSearchOnline = await axios({
+            url,
             method: 'GET',
             headers,
         })
-            .then((res: Response) => {
-                this.updateRateReset(res.headers.get('ratelimit-reset'));
+            .then((res) => {
+                this.updateRateReset(res.headers['ratelimit-reset']);
 
-                if (res.status === 200 && res.ok) {
-                    return res.json();
+                if (res.status === 200) {
+                    return res.data;
                 }
 
                 if (res.status === 429) {

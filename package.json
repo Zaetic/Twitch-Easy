@@ -14,11 +14,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "node-fetch": "^2.6.1"
+    "axios": "^0.26.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.10",
-    "@types/node-fetch": "^2.5.12",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
     "eslint": "^8.7.0",
