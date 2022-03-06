@@ -1,12 +1,13 @@
 {
   "name": "twitch-easy",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Easy twitch api wrapper",
   "main": "lib/index.js",
   "types": "lib",
   "scripts": {
     "pack": "npm pack",
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "start": "tsc && node ."
   },
   "author": {
     "name": "João Gabriel",
@@ -14,27 +15,19 @@
   },
   "license": "MIT",
   "dependencies": {
-    "node-fetch": "^2.6.1"
+    "axios": "^0.26.0"
   },
   "devDependencies": {
-    "@types/node": "^14.14.45",
-    "@types/node-fetch": "^2.5.10",
-    "@typescript-eslint/eslint-plugin": "^4.23.0",
-    "@typescript-eslint/parser": "^4.23.0",
-    "eslint": "^7.26.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.23.1",
-    "eslint-plugin-prettier": "^3.4.0",
-    "prettier": "^2.3.0",
-    "typescript": "^4.2.4"
-  },
-  "prettier": {
-    "trailingComma": "es5",
-    "tabWidth": 4,
-    "printWidth": 150,
-    "semi": true,
-    "singleQuote": true
+    "@types/node": "^17.0.21",
+    "@typescript-eslint/eslint-plugin": "^5.13.0",
+    "@typescript-eslint/parser": "^5.13.0",
+    "eslint": "^8.10.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.4.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.5.1",
+    "typescript": "^4.5.5"
   },
   "repository": {
     "type": "git",

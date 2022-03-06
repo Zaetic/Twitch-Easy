@@ -1,3 +1,3 @@
-import { TwitchAPI as core } from './twitchAPI';
+import TwitchAPI from './twitchAPI';
 
-export default core;
+export = TwitchAPI;
