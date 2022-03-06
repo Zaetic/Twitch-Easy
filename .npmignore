@@ -5,3 +5,4 @@ src/
 node_modules/
 package-lock.json
 images/
+.prettierrc.json

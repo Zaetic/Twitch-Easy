@@ -50,6 +50,19 @@ export type StreamerSearchOnline = {
     };
 };
 
+export type Game = {
+    id: number;
+    name: string;
+    box_art_url: string;
+};
+
+export type GamesSearchOnline = {
+    data: Game[];
+    pagination: {
+        cursor?: string;
+    };
+};
+
 export interface ITwitchAPI {
     /**
      * Get and update token
@@ -83,4 +96,9 @@ export interface ITwitchAPI {
      * @param paginator - Optional
      */
     getStreamersOnline({ id, quantity, paginator }: { id: string; quantity: number; paginator?: string }): Promise<StreamerSearchOnline | null>;
+    /**
+     * Get top games of twitch
+     * @param quantity -
+     */
+    getTopGames(quantity: number): Promise<Game[] | null>;
 }
