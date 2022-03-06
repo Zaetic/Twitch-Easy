@@ -43,7 +43,7 @@ const TwitchEasy = require('twitch-easy');
 
 const api = new TwitchEasy('CLIENT_ID', 'CLIENT_SECRET');
 
-const getStreamer = () => {
+const getStreamer = async () => {
     const streamer = await api.getStreamerByName('streamer_name');
     console.log(streamer);
     return streamer;
@@ -61,3 +61,5 @@ getStreamer();
 `getStreamersOnline ({ name, qnt, paginator? })` - Returns a array list referring to the searched online streamer id
 
 `getStreamerOnline (id)` - Returns object referring to the searched online streamer id
+
+`getTopGames (quantity)` - Returns a array list referring to the top games of Twitch
