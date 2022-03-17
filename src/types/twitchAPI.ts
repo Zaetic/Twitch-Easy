@@ -51,7 +51,7 @@ export type StreamerSearchOnline = {
 };
 
 export type Game = {
-    id: number;
+    id: string;
     name: string;
     box_art_url: string;
 };
@@ -101,4 +101,14 @@ export interface ITwitchAPI {
      * @param quantity -
      */
     getTopGames(quantity: number): Promise<Game[] | null>;
+    /**
+     * Get a game by the name
+     * @param name
+     */
+    getGameByName(name: string): Promise<Game | null>;
+    /**
+     * Get a game by the id
+     * @param id
+     */
+    getGameById(id: string): Promise<Game | null>;
 }

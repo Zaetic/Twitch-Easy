@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GET_CHANNEL, GET_GAMES_TOP, GET_STREAM, twitchAouth2 } from './defaults';
+import { GET_CHANNEL, GET_GAMES, GET_GAMES_TOP, GET_STREAM, twitchAouth2 } from './defaults';
 import {
     ITwitchAPI,
     ChannelSearchName,
@@ -279,5 +279,107 @@ export default class TwitchAPI implements ITwitchAPI {
             });
 
         return games;
+    }
+
+    private async fetchGames({
+        quantity = 20,
+        name,
+        id,
+        paginator,
+    }: {
+        quantity: number;
+        name?: string;
+        id?: string;
+        paginator?: string;
+    }): Promise<GamesSearchOnline | null> {
+        await this.getToken();
+        const headers = this.createHeader();
+
+        let url = `${GET_GAMES}?`;
+
+        if (name) url += `name=${name}&quantity=${quantity}`;
+        if (id) url += `id=${id}&quantity=${quantity}`;
+        if (paginator) url += `&after=${paginator}`;
+
+        const games: GamesSearchOnline = await axios({
+            url,
+            method: 'GET',
+            headers,
+        })
+            .then((res) => {
+                console.log(res);
+                this.updateRateReset(res.headers['ratelimit-reset']);
+
+                if (res.status === 200) {
+                    return res.data;
+                }
+
+                if (res.status === 429) {
+                    throw new Error(`Excess rate limit, will be reset at ${this.ratelimit_reset}`);
+                }
+
+                return null;
+            })
+            .catch((err: Error) => {
+                throw err;
+            });
+
+        return games;
+    }
+
+    public async getGameByName(name: string): Promise<Game | null> {
+        if (!name) throw new Error('Name is null, pass a value');
+
+        let cursor: string | null = null;
+        let game: Game | null = null;
+        let finish = false;
+
+        while (finish === false) {
+            let games: GamesSearchOnline | null = null;
+
+            if (!cursor) games = await this.fetchGames({ name, quantity: 100 });
+            else if (cursor) games = await this.fetchGames({ name, quantity: 100, paginator: cursor });
+
+            if (!games || (games.data && Array.isArray(games.data) && games.data.length === 0)) finish = true;
+            else if (!game && cursor) finish = true;
+            else {
+                const search = games.data.find((s) => s.name.toLowerCase() === name.toLowerCase());
+                if (search) {
+                    game = search;
+                    finish = true;
+                } else if (games.pagination.cursor) cursor = games.pagination.cursor;
+                else if (!games.pagination.cursor && !search) finish = true;
+            }
+        }
+
+        return game;
+    }
+
+    public async getGameById(id: string): Promise<Game | null> {
+        if (!id) throw new Error('Name is null, pass a value');
+
+        let cursor: string | null = null;
+        let game: Game | null = null;
+        let finish = false;
+
+        while (finish === false) {
+            let games: GamesSearchOnline | null = null;
+
+            if (!cursor) games = await this.fetchGames({ id, quantity: 100 });
+            else if (cursor) games = await this.fetchGames({ id, quantity: 100, paginator: cursor });
+
+            if (!games || (games.data && Array.isArray(games.data) && games.data.length === 0)) finish = true;
+            else if (!game && cursor) finish = true;
+            else {
+                const search = games.data.find((s) => s.id === id);
+                if (search) {
+                    game = search;
+                    finish = true;
+                } else if (games.pagination.cursor) cursor = games.pagination.cursor;
+                else if (!games.pagination.cursor && !search) finish = true;
+            }
+        }
+
+        return game;
     }
 }
