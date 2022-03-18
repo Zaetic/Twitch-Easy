@@ -103,6 +103,7 @@ export default class TwitchAPI implements ITwitchAPI {
                 if (res.status === 200) {
                     return res.data;
                 }
+
                 if (res.status === 429) {
                     throw new Error(`Excess rate limit, will be reset at ${this.ratelimit_reset}`);
                 }
