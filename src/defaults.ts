@@ -3,5 +3,6 @@ const GET_CHANNEL = 'https://api.twitch.tv/helix/search/channels';
 const GET_STREAM = 'https://api.twitch.tv/helix/streams';
 const GET_GAMES_TOP = 'https://api.twitch.tv/helix/games/top';
 const GET_GAMES = 'https://api.twitch.tv/helix/games';
+const GET_CLIPS = 'https://api.twitch.tv/helix/clips';
 
-export { twitchAouth2, GET_CHANNEL, GET_STREAM, GET_GAMES_TOP, GET_GAMES };
+export { twitchAouth2, GET_CHANNEL, GET_STREAM, GET_GAMES_TOP, GET_GAMES, GET_CLIPS };
