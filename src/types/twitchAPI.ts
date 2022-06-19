@@ -50,6 +50,44 @@ export type StreamerSearchOnline = {
     };
 };
 
+export type Game = {
+    id: string;
+    name: string;
+    box_art_url: string;
+};
+
+export type GamesSearchOnline = {
+    data: Game[];
+    pagination: {
+        cursor?: string;
+    };
+};
+
+export type Clip = {
+    id: string;
+    url: string;
+    embed_url: string;
+    broadcaster_id: string;
+    broadcaster_name: string;
+    creator_id: string;
+    creator_name: string;
+    video_id: string;
+    game_id: string;
+    language: string;
+    title: string;
+    view_count: number;
+    created_at: Date;
+    thumbnail_url: string;
+    duration: number;
+};
+
+export type ClipsSearchOnline = {
+    data: Clip[];
+    pagination: {
+        cursor?: string;
+    };
+};
+
 export interface ITwitchAPI {
     /**
      * Get and update token
@@ -83,4 +121,38 @@ export interface ITwitchAPI {
      * @param paginator - Optional
      */
     getStreamersOnline({ id, quantity, paginator }: { id: string; quantity: number; paginator?: string }): Promise<StreamerSearchOnline | null>;
+    /**
+     * Get top games of twitch
+     * @param quantity -
+     */
+    getTopGames(quantity: number): Promise<Game[] | null>;
+    /**
+     * Get a game by the name
+     * @param name
+     */
+    getGameByName(name: string): Promise<Game | null>;
+    /**
+     * Get a game by the id
+     * @param id
+     */
+    getGameById(id: string): Promise<Game | null>;
+    /**
+     * Get clips by id, gameid, broadcasterId.
+     * - You may specify only one of these parameters.
+     * @param id - Optional
+     * @param gameId - Optional
+     * @param broadcasterId - Optional
+     * @param quantity - Optional
+     */
+    getClips({
+        quantity,
+        id,
+        gameId,
+        broadcasterId,
+    }: {
+        quantity?: number;
+        id?: string | Array<string>;
+        gameId?: string;
+        broadcasterId?: string;
+    }): Promise<Clip[] | null>;
 }
