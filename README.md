@@ -7,9 +7,9 @@
     <a href="https://www.npmjs.com/package/twitch-easy"><img src="https://img.shields.io/npm/v/twitch-easy?color=blue&logo=npm&style=flat-square"></a>
 </p>
 
-Hey, do you want an easy connection to the Twitch API ?? I am here to solve this problem !!
+Hey, do you want an easy connection to the Twitch API ?? I am here to solve this problem!!
 
-I am an opensouce wrapper that makes the connection with the twitch `Helix API` and i was built to be fast and very easy to use !!
+I am an opensouce wrapper that makes the connection with the twitch `Helix API` and i was built to be fast and very easy to use!!
 
 ## Installation
 
@@ -63,3 +63,9 @@ getStreamer();
 `getStreamerOnline (id)` - Returns object referring to the searched online streamer id
 
 `getTopGames (quantity)` - Returns a array list referring to the top games of Twitch
+
+`getGameByName (name)` - Returns a object referring to the games by the name
+
+`getGameById (id)` - Returns a object referring to the games by the id
+
+`getClips ({ quantity?, id?, gameId?, broadcasterId? })` - Returns a array list referring to the clips by one param

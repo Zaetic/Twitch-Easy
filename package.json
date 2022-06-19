@@ -1,6 +1,6 @@
 {
   "name": "twitch-easy",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Easy twitch api wrapper",
   "main": "lib/index.js",
   "types": "lib",
@@ -15,19 +15,19 @@
   },
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.26.0"
+    "axios": "^0.27.2"
   },
   "devDependencies": {
-    "@types/node": "^17.0.21",
-    "@typescript-eslint/eslint-plugin": "^5.13.0",
-    "@typescript-eslint/parser": "^5.13.0",
-    "eslint": "^8.10.0",
+    "@types/node": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.28.0",
+    "@typescript-eslint/parser": "^5.28.0",
+    "eslint": "^8.18.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^8.4.0",
-    "eslint-plugin-import": "^2.25.4",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "prettier": "^2.5.1",
-    "typescript": "^4.5.5"
+    "prettier": "^2.7.1",
+    "typescript": "^4.7.4"
   },
   "repository": {
     "type": "git",
