@@ -2,7 +2,7 @@ import axios from 'axios';
 import { GET_GAMES, GET_GAMES_TOP } from '../defaults';
 import { Game, GamesSearchOnline, ITwitchAPI } from '../types/twitchAPI';
 
-export default class Games {
+class Games {
     private core: ITwitchAPI;
 
     constructor(TwitchAPI: ITwitchAPI) {
@@ -179,3 +179,5 @@ export default class Games {
         return game;
     }
 }
+
+export { Games };
