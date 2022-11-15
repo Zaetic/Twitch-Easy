@@ -1,16 +1,7 @@
 import axios from 'axios';
-import { GET_CHANNEL, GET_CLIPS, GET_STREAM, twitchAouth2 } from './defaults';
-import { Games } from './modules';
-import {
-    ITwitchAPI,
-    ChannelSearchName,
-    StreamerByName,
-    StreamerOnline,
-    StreamerSearchOnline,
-    Token,
-    ClipsSearchOnline,
-    Clip,
-} from './types/twitchAPI';
+import { GET_CLIPS, twitchAouth2 } from './defaults';
+import { Games, Streamers } from './modules';
+import { ITwitchAPI, Token, ClipsSearchOnline, Clip } from './types/twitchAPI';
 
 export default class TwitchAPI implements ITwitchAPI {
     private CLIENT_ID: string;
@@ -18,6 +9,7 @@ export default class TwitchAPI implements ITwitchAPI {
     private ratelimit_reset?: Date;
     private token: { access_token: string; expires_in: number; time: number; token_type: string };
     private _games: Games;
+    private _streamers: Streamers;
 
     constructor(clientId: string, clientSecret: string) {
         this.CLIENT_ID = clientId;
@@ -30,10 +22,15 @@ export default class TwitchAPI implements ITwitchAPI {
         };
 
         this._games = new Games(this);
+        this._streamers = new Streamers(this);
     }
 
     public get games(): Games {
         return this._games;
+    }
+
+    public get streamers(): Streamers {
+        return this._streamers;
     }
 
     public get ratelimit(): Date | undefined {
@@ -85,144 +82,6 @@ export default class TwitchAPI implements ITwitchAPI {
         };
 
         return headers;
-    }
-
-    public async getStreamersByName({
-        name,
-        quantity = 20,
-        paginator,
-    }: {
-        name: string;
-        quantity: number;
-        paginator?: string;
-    }): Promise<ChannelSearchName | null> {
-        if (!name) throw new Error('Name is null, pass a value');
-        await this.getToken();
-        const headers = this.createHeader();
-
-        const url = paginator
-            ? `${GET_CHANNEL}?first=${quantity}&query=${name}&after=${paginator}`
-            : `${GET_CHANNEL}?first=${quantity}&query=${name}`;
-
-        const streamers: ChannelSearchName | null = await axios({
-            url,
-            method: 'GET',
-            headers,
-        })
-            .then((res) => {
-                this.updateRateReset(res.headers['ratelimit-reset']);
-
-                if (res.status === 200) {
-                    return res.data;
-                }
-
-                if (res.status === 429) {
-                    throw new Error(`Excess rate limit, will be reset at ${this.ratelimit_reset}`);
-                }
-
-                return null;
-            })
-            .catch((err: Error) => {
-                throw new Error(err.message);
-            });
-
-        return streamers;
-    }
-
-    public async getStreamerByName(name: string): Promise<StreamerByName | null> {
-        if (!name) throw new Error('Name is null, pass a value');
-
-        let cursor: string | null = null;
-        let streamer: StreamerByName | null = null;
-        let finish = false;
-
-        while (finish === false) {
-            let streamers: ChannelSearchName | null = null;
-
-            if (!cursor) streamers = await this.getStreamersByName({ name, quantity: 100 });
-            else if (cursor) streamers = await this.getStreamersByName({ name, quantity: 100, paginator: cursor });
-
-            if (!streamers) finish = true;
-            else if (!streamer && cursor) finish = true;
-            else {
-                const search = streamers.data.find((s) => s.display_name.toLowerCase() === name.toLowerCase());
-                if (search) {
-                    streamer = search;
-                    finish = true;
-                } else if (streamers.pagination.cursor) cursor = streamers.pagination.cursor;
-                else if (!streamers.pagination.cursor && !search) finish = true;
-            }
-        }
-
-        return streamer;
-    }
-
-    public async getStreamersOnline({
-        id,
-        quantity = 20,
-        paginator,
-    }: {
-        id: string;
-        quantity: number;
-        paginator?: string;
-    }): Promise<StreamerSearchOnline | null> {
-        if (!id) throw new Error('ID is null, pass a value');
-        await this.getToken();
-        const headers = this.createHeader();
-
-        const url = paginator ? `${GET_STREAM}?first=${quantity}&user_id=${id}&after=${paginator}` : `${GET_STREAM}?first=${quantity}&user_id=${id}`;
-
-        const streamers: StreamerSearchOnline = await axios({
-            url,
-            method: 'GET',
-            headers,
-        })
-            .then((res) => {
-                this.updateRateReset(res.headers['ratelimit-reset']);
-
-                if (res.status === 200) {
-                    return res.data;
-                }
-
-                if (res.status === 429) {
-                    throw new Error(`Excess rate limit, will be reset at ${this.ratelimit_reset}`);
-                }
-
-                return null;
-            })
-            .catch((err: Error) => {
-                throw new Error(err.message);
-            });
-
-        return streamers;
-    }
-
-    public async getStreamerOnline(id: string): Promise<StreamerOnline | null> {
-        if (!id) throw new Error('ID is null, pass a value');
-
-        let cursor: string | null = null;
-        let streamer: StreamerOnline | null = null;
-        let finish = false;
-
-        while (finish === false) {
-            let streamers: StreamerSearchOnline | null = null;
-
-            if (!cursor) streamers = await this.getStreamersOnline({ id, quantity: 100 });
-            else if (cursor) streamers = await this.getStreamersOnline({ id, quantity: 100, paginator: cursor });
-
-            if (!streamers) finish = true;
-            else if (!streamer && cursor) finish = true;
-            else {
-                const search = streamers.data.find((s) => s.user_id.toString() === id.toLowerCase());
-                if (search) {
-                    streamer = search;
-                    finish = true;
-                } else if (streamers.pagination.cursor) cursor = streamers.pagination.cursor;
-                else if (!streamers.pagination.cursor && !search) finish = true;
-            }
-        }
-
-        return streamer;
     }
 
     public async getClips({

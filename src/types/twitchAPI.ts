@@ -109,34 +109,6 @@ export interface ITwitchAPI {
     checkToken(): Promise<Boolean>;
     updateRateReset(rate: string | null): void;
     createHeader(): Header;
-    /**
-     * Get a streamer by the name
-     * @param name -
-     */
-    getStreamerByName(name: string): Promise<StreamerByName | null>;
-    /**
-     * Get a streamers by the name
-     * @param name -
-     * @param quantity -
-     * @param paginator - Optional
-     */
-    getStreamersByName({ name, quantity, paginator }: { name: string; quantity: number; paginator?: string }): Promise<ChannelSearchName | null>;
-    /**
-     * Get a online streamer by the id
-     * @param id -
-     */
-    getStreamerOnline(id: string): Promise<StreamerOnline | null>;
-    /**
-     * Get a online streamers by the id
-     * @param id -
-     * @param quantity -
-     * @param paginator - Optional
-     */
-    getStreamersOnline({ id, quantity, paginator }: { id: string; quantity: number; paginator?: string }): Promise<StreamerSearchOnline | null>;
-    /**
-     * Get top games of twitch
-     * @param quantity -
-     */
     getClips({
         quantity,
         id,
