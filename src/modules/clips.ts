@@ -4,13 +4,15 @@ import { Clip, ClipsSearchOnline, ITwitchAPI } from '../types/twitchAPI';
 
 class Clips {
     private core: ITwitchAPI;
+    private FETCH_QTY = 100;
+    private PARAM_QTY = 20;
 
     constructor(TwitchAPI: ITwitchAPI) {
         this.core = TwitchAPI;
     }
 
     public async getClips({
-        quantity = 20,
+        quantity = this.PARAM_QTY,
         id,
         gameId,
         broadcasterId,
@@ -37,7 +39,7 @@ class Clips {
             quantity,
         };
 
-        if (quantity < 100) {
+        if (quantity < this.FETCH_QTY) {
             const clipsFetch = await this.fetchClips(objFetch);
             if (!clipsFetch) return null;
             clips = clipsFetch.data;
@@ -49,7 +51,7 @@ class Clips {
                 if (left <= 0) {
                     finish = true;
                 } else {
-                    const quantityLeft = left < 100 ? left : 100;
+                    const quantityLeft = left < this.FETCH_QTY ? left : this.FETCH_QTY;
                     objFetch.quantity = quantityLeft;
 
                     if (!cursor) clipsFetch = await this.fetchClips(objFetch);
@@ -70,7 +72,7 @@ class Clips {
     }
 
     private async fetchClips({
-        quantity = 20,
+        quantity = this.PARAM_QTY,
         id,
         gameId,
         broadcasterId,
