@@ -1,13 +1,12 @@
-import axios from 'axios';
 import { GET_CHANNEL, GET_STREAM } from '../defaults';
-import { Auth } from '../services/auth';
+import { Auth, Http } from '../services';
 import { ChannelSearchName, StreamerByName, StreamerOnline, StreamerSearchOnline } from '../types/streamers';
 
 class Streamers {
     private FETCH_QTY = 100;
     private PARAM_QTY = 20;
 
-    constructor(private readonly auth: Auth) {}
+    constructor(private readonly http: Http, private readonly auth: Auth) {}
 
     public async getStreamersByName({
         name,
@@ -26,11 +25,11 @@ class Streamers {
             ? `${GET_CHANNEL}?first=${quantity}&query=${name}&after=${paginator}`
             : `${GET_CHANNEL}?first=${quantity}&query=${name}`;
 
-        const streamers: ChannelSearchName | null = await axios({
-            url,
-            method: 'GET',
-            headers,
-        })
+        const streamers: ChannelSearchName | null = await this.http
+            .get({
+                url,
+                headers,
+            })
             .then((res) => {
                 this.auth.updateRateReset(res.headers['ratelimit-reset']);
 
@@ -94,11 +93,11 @@ class Streamers {
 
         const url = paginator ? `${GET_STREAM}?first=${quantity}&user_id=${id}&after=${paginator}` : `${GET_STREAM}?first=${quantity}&user_id=${id}`;
 
-        const streamers: StreamerSearchOnline = await axios({
-            url,
-            method: 'GET',
-            headers,
-        })
+        const streamers: StreamerSearchOnline = await this.http
+            .get({
+                url,
+                headers,
+            })
             .then((res) => {
                 this.auth.updateRateReset(res.headers['ratelimit-reset']);
 

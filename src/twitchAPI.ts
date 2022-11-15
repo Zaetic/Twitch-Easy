@@ -12,9 +12,9 @@ export default class TwitchAPI implements ITwitchAPI {
     constructor(clientId: string, clientSecret: string) {
         this._http = new Http();
         this._auth = new Auth(this._http, clientId, clientSecret);
-        this._streamers = new Streamers(this._auth);
-        this._clips = new Clips(this._auth);
-        this._games = new Games(this._auth);
+        this._streamers = new Streamers(this._http, this._auth);
+        this._clips = new Clips(this._http, this._auth);
+        this._games = new Games(this._http, this._auth);
     }
 
     public get games(): Games {

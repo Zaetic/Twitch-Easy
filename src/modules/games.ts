@@ -1,13 +1,12 @@
-import axios from 'axios';
 import { GET_GAMES, GET_GAMES_TOP } from '../defaults';
 import { Game, GamesSearchOnline } from '../types/games';
-import { Auth } from '../services';
+import { Auth, Http } from '../services';
 
 class Games {
     private FETCH_QTY = 100;
     private PARAM_QTY = 20;
 
-    constructor(private readonly auth: Auth) {}
+    constructor(private readonly http: Http, private readonly auth: Auth) {}
 
     public async getTopGames(quantity: number): Promise<Game[] | null> {
         if (quantity < 1) throw new Error('The parameter "quantity" was malformed: the value must be greater than or equal to 1');
@@ -59,11 +58,11 @@ class Games {
 
         const url = paginator ? `${GET_GAMES_TOP}?first=${quantity}&after=${paginator}` : `${GET_GAMES_TOP}?first=${quantity}`;
 
-        const games: GamesSearchOnline = await axios({
-            url,
-            method: 'GET',
-            headers,
-        })
+        const games: GamesSearchOnline = await this.http
+            .get({
+                url,
+                headers,
+            })
             .then((res) => {
                 this.auth.updateRateReset(res.headers['ratelimit-reset']);
 
@@ -104,11 +103,11 @@ class Games {
         if (id) url += `id=${id}&quantity=${quantity}`;
         if (paginator) url += `&after=${paginator}`;
 
-        const games: GamesSearchOnline = await axios({
-            url,
-            method: 'GET',
-            headers,
-        })
+        const games: GamesSearchOnline = await this.http
+            .get({
+                url,
+                headers,
+            })
             .then((res) => {
                 this.auth.updateRateReset(res.headers['ratelimit-reset']);
 
