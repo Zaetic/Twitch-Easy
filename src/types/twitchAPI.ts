@@ -88,7 +88,15 @@ export type ClipsSearchOnline = {
     };
 };
 
+export type Header = {
+    'Content-Type': string;
+    'Client-ID': string;
+    Authorization: string;
+};
+
 export interface ITwitchAPI {
+    ratelimit: Date | undefined;
+
     /**
      * Get and update token
      */
@@ -97,6 +105,10 @@ export interface ITwitchAPI {
      * Check if the token is valid
      */
     checkToken(): Promise<Boolean>;
+    getToken(): Promise<void>;
+    checkToken(): Promise<Boolean>;
+    updateRateReset(rate: string | null): void;
+    createHeader(): Header;
     /**
      * Get a streamer by the name
      * @param name -
@@ -124,25 +136,6 @@ export interface ITwitchAPI {
     /**
      * Get top games of twitch
      * @param quantity -
-     */
-    getTopGames(quantity: number): Promise<Game[] | null>;
-    /**
-     * Get a game by the name
-     * @param name
-     */
-    getGameByName(name: string): Promise<Game | null>;
-    /**
-     * Get a game by the id
-     * @param id
-     */
-    getGameById(id: string): Promise<Game | null>;
-    /**
-     * Get clips by id, gameid, broadcasterId.
-     * - You may specify only one of these parameters.
-     * @param id - Optional
-     * @param gameId - Optional
-     * @param broadcasterId - Optional
-     * @param quantity - Optional
      */
     getClips({
         quantity,
