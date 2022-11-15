@@ -4,6 +4,8 @@ import { Game, GamesSearchOnline, ITwitchAPI } from '../types/twitchAPI';
 
 class Games {
     private core: ITwitchAPI;
+    private FETCH_QTY = 100;
+    private PARAM_QTY = 20;
 
     constructor(TwitchAPI: ITwitchAPI) {
         this.core = TwitchAPI;
@@ -16,7 +18,7 @@ class Games {
         let games: Game[] = [];
         let finish = false;
 
-        if (quantity < 100) {
+        if (quantity < this.FETCH_QTY) {
             const gamesFetch = await this.fetchTopGames({ quantity });
             if (!gamesFetch) return null;
             games = gamesFetch.data;
@@ -28,7 +30,7 @@ class Games {
                 if (left <= 0) {
                     finish = true;
                 } else {
-                    const quantityLeft = left < 100 ? left : 100;
+                    const quantityLeft = left < this.FETCH_QTY ? left : this.FETCH_QTY;
 
                     if (!cursor) gamesFetch = await this.fetchTopGames({ quantity: quantityLeft });
                     else if (cursor) gamesFetch = await this.fetchTopGames({ quantity: quantityLeft, paginator: cursor });
@@ -47,7 +49,13 @@ class Games {
         return games;
     }
 
-    private async fetchTopGames({ quantity = 20, paginator }: { quantity: number; paginator?: string }): Promise<GamesSearchOnline | null> {
+    private async fetchTopGames({
+        quantity = this.PARAM_QTY,
+        paginator,
+    }: {
+        quantity: number;
+        paginator?: string;
+    }): Promise<GamesSearchOnline | null> {
         await this.core.getToken();
         const headers = this.core.createHeader();
 
@@ -79,7 +87,7 @@ class Games {
     }
 
     private async fetchGames({
-        quantity = 20,
+        quantity = this.PARAM_QTY,
         name,
         id,
         paginator,
@@ -133,8 +141,8 @@ class Games {
         while (finish === false) {
             let games: GamesSearchOnline | null = null;
 
-            if (!cursor) games = await this.fetchGames({ name, quantity: 100 });
-            else if (cursor) games = await this.fetchGames({ name, quantity: 100, paginator: cursor });
+            if (!cursor) games = await this.fetchGames({ name, quantity: this.FETCH_QTY });
+            else if (cursor) games = await this.fetchGames({ name, quantity: this.FETCH_QTY, paginator: cursor });
 
             if (!games || (games.data && Array.isArray(games.data) && games.data.length === 0)) finish = true;
             else if (!game && cursor) finish = true;
@@ -161,8 +169,8 @@ class Games {
         while (finish === false) {
             let games: GamesSearchOnline | null = null;
 
-            if (!cursor) games = await this.fetchGames({ id, quantity: 100 });
-            else if (cursor) games = await this.fetchGames({ id, quantity: 100, paginator: cursor });
+            if (!cursor) games = await this.fetchGames({ id, quantity: this.FETCH_QTY });
+            else if (cursor) games = await this.fetchGames({ id, quantity: this.FETCH_QTY, paginator: cursor });
 
             if (!games || (games.data && Array.isArray(games.data) && games.data.length === 0)) finish = true;
             else if (!game && cursor) finish = true;
