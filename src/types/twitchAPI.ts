@@ -109,15 +109,4 @@ export interface ITwitchAPI {
     checkToken(): Promise<Boolean>;
     updateRateReset(rate: string | null): void;
     createHeader(): Header;
-    getClips({
-        quantity,
-        id,
-        gameId,
-        broadcasterId,
-    }: {
-        quantity?: number;
-        id?: string | Array<string>;
-        gameId?: string;
-        broadcasterId?: string;
-    }): Promise<Clip[] | null>;
 }
