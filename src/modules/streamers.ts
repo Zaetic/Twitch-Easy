@@ -4,6 +4,8 @@ import { ChannelSearchName, ITwitchAPI, StreamerByName, StreamerOnline, Streamer
 
 class Streamers {
     private core: ITwitchAPI;
+    private FETCH_QTY = 100;
+    private PARAM_QTY = 20;
 
     constructor(TwitchAPI: ITwitchAPI) {
         this.core = TwitchAPI;
@@ -11,7 +13,7 @@ class Streamers {
 
     public async getStreamersByName({
         name,
-        quantity = 20,
+        quantity = this.PARAM_QTY,
         paginator,
     }: {
         name: string;
@@ -61,8 +63,8 @@ class Streamers {
         while (finish === false) {
             let streamers: ChannelSearchName | null = null;
 
-            if (!cursor) streamers = await this.getStreamersByName({ name, quantity: 100 });
-            else if (cursor) streamers = await this.getStreamersByName({ name, quantity: 100, paginator: cursor });
+            if (!cursor) streamers = await this.getStreamersByName({ name, quantity: this.FETCH_QTY });
+            else if (cursor) streamers = await this.getStreamersByName({ name, quantity: this.FETCH_QTY, paginator: cursor });
 
             if (!streamers) finish = true;
             else if (!streamer && cursor) finish = true;
@@ -81,7 +83,7 @@ class Streamers {
 
     public async getStreamersOnline({
         id,
-        quantity = 20,
+        quantity = this.PARAM_QTY,
         paginator,
     }: {
         id: string;
@@ -129,8 +131,8 @@ class Streamers {
         while (finish === false) {
             let streamers: StreamerSearchOnline | null = null;
 
-            if (!cursor) streamers = await this.getStreamersOnline({ id, quantity: 100 });
-            else if (cursor) streamers = await this.getStreamersOnline({ id, quantity: 100, paginator: cursor });
+            if (!cursor) streamers = await this.getStreamersOnline({ id, quantity: this.FETCH_QTY });
+            else if (cursor) streamers = await this.getStreamersOnline({ id, quantity: this.FETCH_QTY, paginator: cursor });
 
             if (!streamers) finish = true;
             else if (!streamer && cursor) finish = true;
