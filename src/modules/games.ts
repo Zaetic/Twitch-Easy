@@ -1,16 +1,13 @@
 import axios from 'axios';
 import { GET_GAMES, GET_GAMES_TOP } from '../defaults';
-import { ITwitchAPI } from '../types/twitchAPI';
 import { Game, GamesSearchOnline } from '../types/games';
+import { Auth } from '../services';
 
 class Games {
-    private core: ITwitchAPI;
     private FETCH_QTY = 100;
     private PARAM_QTY = 20;
 
-    constructor(TwitchAPI: ITwitchAPI) {
-        this.core = TwitchAPI;
-    }
+    constructor(private readonly auth: Auth) {}
 
     public async getTopGames(quantity: number): Promise<Game[] | null> {
         if (quantity < 1) throw new Error('The parameter "quantity" was malformed: the value must be greater than or equal to 1');
@@ -57,8 +54,8 @@ class Games {
         quantity: number;
         paginator?: string;
     }): Promise<GamesSearchOnline | null> {
-        await this.core.getToken();
-        const headers = this.core.createHeader();
+        await this.auth.getToken();
+        const headers = this.auth.createHeader();
 
         const url = paginator ? `${GET_GAMES_TOP}?first=${quantity}&after=${paginator}` : `${GET_GAMES_TOP}?first=${quantity}`;
 
@@ -68,14 +65,14 @@ class Games {
             headers,
         })
             .then((res) => {
-                this.core.updateRateReset(res.headers['ratelimit-reset']);
+                this.auth.updateRateReset(res.headers['ratelimit-reset']);
 
                 if (res.status === 200) {
                     return res.data;
                 }
 
                 if (res.status === 429) {
-                    throw new Error(`Excess rate limit, will be reset at ${this.core.ratelimit}`);
+                    throw new Error(`Excess rate limit, will be reset at ${this.auth.ratelimit_reset}`);
                 }
 
                 return null;
@@ -98,8 +95,8 @@ class Games {
         id?: string;
         paginator?: string;
     }): Promise<GamesSearchOnline | null> {
-        await this.core.getToken();
-        const headers = this.core.createHeader();
+        await this.auth.getToken();
+        const headers = this.auth.createHeader();
 
         let url = `${GET_GAMES}?`;
 
@@ -113,14 +110,14 @@ class Games {
             headers,
         })
             .then((res) => {
-                this.core.updateRateReset(res.headers['ratelimit-reset']);
+                this.auth.updateRateReset(res.headers['ratelimit-reset']);
 
                 if (res.status === 200) {
                     return res.data;
                 }
 
                 if (res.status === 429) {
-                    throw new Error(`Excess rate limit, will be reset at ${this.core.ratelimit}`);
+                    throw new Error(`Excess rate limit, will be reset at ${this.auth.ratelimit_reset}`);
                 }
 
                 return null;
