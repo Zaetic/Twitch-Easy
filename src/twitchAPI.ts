@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { GET_CLIPS, twitchAouth2 } from './defaults';
-import { Games, Streamers } from './modules';
-import { ITwitchAPI, Token, ClipsSearchOnline, Clip } from './types/twitchAPI';
+import { twitchAouth2 } from './defaults';
+import { Clips, Games, Streamers } from './modules';
+import { ITwitchAPI, Token } from './types/twitchAPI';
 
 export default class TwitchAPI implements ITwitchAPI {
     private CLIENT_ID: string;
@@ -10,6 +10,7 @@ export default class TwitchAPI implements ITwitchAPI {
     private token: { access_token: string; expires_in: number; time: number; token_type: string };
     private _games: Games;
     private _streamers: Streamers;
+    private _clips: Clips;
 
     constructor(clientId: string, clientSecret: string) {
         this.CLIENT_ID = clientId;
@@ -23,6 +24,7 @@ export default class TwitchAPI implements ITwitchAPI {
 
         this._games = new Games(this);
         this._streamers = new Streamers(this);
+        this._clips = new Clips(this);
     }
 
     public get games(): Games {
@@ -31,6 +33,10 @@ export default class TwitchAPI implements ITwitchAPI {
 
     public get streamers(): Streamers {
         return this._streamers;
+    }
+
+    public get clips(): Clips {
+        return this._clips;
     }
 
     public get ratelimit(): Date | undefined {
@@ -82,115 +88,5 @@ export default class TwitchAPI implements ITwitchAPI {
         };
 
         return headers;
-    }
-
-    public async getClips({
-        quantity = 20,
-        id,
-        gameId,
-        broadcasterId,
-    }: {
-        quantity?: number;
-        id?: string | Array<string>;
-        gameId?: string;
-        broadcasterId?: string;
-    }): Promise<Clip[] | null> {
-        if (!id && !gameId && !broadcasterId) throw new Error('id (one or more), broadcasterId, or gameId must be specified');
-
-        let cursor: string | null = null;
-        let clips: Clip[] = [];
-        let finish = false;
-        const objFetch: {
-            id?: string | Array<string>;
-            gameId?: string;
-            broadcasterId?: string;
-            quantity: number;
-        } = {
-            id: id || undefined,
-            gameId: gameId || undefined,
-            broadcasterId: broadcasterId || undefined,
-            quantity,
-        };
-
-        if (quantity < 100) {
-            const clipsFetch = await this.fetchClips(objFetch);
-            if (!clipsFetch) return null;
-            clips = clipsFetch.data;
-        } else {
-            while (finish === false) {
-                let clipsFetch: ClipsSearchOnline | null = null;
-                const left = quantity - clips.length;
-
-                if (left <= 0) {
-                    finish = true;
-                } else {
-                    const quantityLeft = left < 100 ? left : 100;
-                    objFetch.quantity = quantityLeft;
-
-                    if (!cursor) clipsFetch = await this.fetchClips(objFetch);
-                    else if (cursor) clipsFetch = await this.fetchClips(objFetch);
-
-                    if (!clipsFetch || clipsFetch.data.length === 0) finish = true;
-                    else {
-                        clips = Array.prototype.concat(clips, clipsFetch.data);
-
-                        if (clipsFetch.pagination.cursor) cursor = clipsFetch.pagination.cursor;
-                        else if (!clipsFetch.pagination.cursor) finish = true;
-                    }
-                }
-            }
-        }
-
-        return clips;
-    }
-
-    private async fetchClips({
-        quantity = 20,
-        id,
-        gameId,
-        broadcasterId,
-        paginator,
-    }: {
-        quantity: number;
-        id?: string | Array<string>;
-        gameId?: string;
-        broadcasterId?: string;
-        paginator?: string;
-    }): Promise<ClipsSearchOnline | null> {
-        await this.getToken();
-        const headers = this.createHeader();
-
-        let url = `${GET_CLIPS}?`;
-
-        if (id) url += `id=${id}`;
-        if (gameId) url += `game_id=${gameId}`;
-        if (broadcasterId) url += `broadcaster_id=${broadcasterId}`;
-
-        url += `&first=${quantity}`;
-        if (paginator) url += `&after=${paginator}`;
-
-        const games: ClipsSearchOnline = await axios({
-            url,
-            method: 'GET',
-            headers,
-        })
-            .then((res) => {
-                this.updateRateReset(res.headers['ratelimit-reset']);
-
-                if (res.status === 200) {
-                    return res.data;
-                }
-
-                if (res.status === 429) {
-                    throw new Error(`Excess rate limit, will be reset at ${this.ratelimit_reset}`);
-                }
-
-                return null;
-            })
-            .catch((err: Error) => {
-                throw err;
-            });
-
-        return games;
     }
 }
