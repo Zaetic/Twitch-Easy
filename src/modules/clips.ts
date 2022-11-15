@@ -1,13 +1,12 @@
-import axios from 'axios';
 import { GET_CLIPS } from '../defaults';
 import { Clip, ClipsSearchOnline } from '../types/clips';
-import { Auth } from '../services';
+import { Auth, Http } from '../services';
 
 class Clips {
     private FETCH_QTY = 100;
     private PARAM_QTY = 20;
 
-    constructor(private readonly auth: Auth) {}
+    constructor(private readonly http: Http, private readonly auth: Auth) {}
 
     public async getClips({
         quantity = this.PARAM_QTY,
@@ -94,11 +93,11 @@ class Clips {
         url += `&first=${quantity}`;
         if (paginator) url += `&after=${paginator}`;
 
-        const games: ClipsSearchOnline = await axios({
-            url,
-            method: 'GET',
-            headers,
-        })
+        const games: ClipsSearchOnline = await this.http
+            .get({
+                url,
+                headers,
+            })
             .then((res) => {
                 this.auth.updateRateReset(res.headers['ratelimit-reset']);
 
