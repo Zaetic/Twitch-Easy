@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { GET_CHANNEL, GET_STREAM } from '../defaults';
-import { ChannelSearchName, ITwitchAPI, StreamerByName, StreamerOnline, StreamerSearchOnline } from '../types/twitchAPI';
+import { ITwitchAPI } from '../types/twitchAPI';
+import { ChannelSearchName, StreamerByName, StreamerOnline, StreamerSearchOnline } from '../types/streamers';
 
 class Streamers {
     private core: ITwitchAPI;

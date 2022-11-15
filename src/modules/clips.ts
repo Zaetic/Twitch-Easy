@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { GET_CLIPS } from '../defaults';
-import { Clip, ClipsSearchOnline, ITwitchAPI } from '../types/twitchAPI';
+import { ITwitchAPI } from '../types/twitchAPI';
+import { Clip, ClipsSearchOnline } from '../types/clips';
 
 class Clips {
     private core: ITwitchAPI;

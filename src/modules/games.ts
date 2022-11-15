@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { GET_GAMES, GET_GAMES_TOP } from '../defaults';
-import { Game, GamesSearchOnline, ITwitchAPI } from '../types/twitchAPI';
+import { ITwitchAPI } from '../types/twitchAPI';
+import { Game, GamesSearchOnline } from '../types/games';
 
 class Games {
     private core: ITwitchAPI;
