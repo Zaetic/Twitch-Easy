@@ -1,16 +1,13 @@
 import axios from 'axios';
 import { GET_CLIPS } from '../defaults';
-import { ITwitchAPI } from '../types/twitchAPI';
 import { Clip, ClipsSearchOnline } from '../types/clips';
+import { Auth } from '../services';
 
 class Clips {
-    private core: ITwitchAPI;
     private FETCH_QTY = 100;
     private PARAM_QTY = 20;
 
-    constructor(TwitchAPI: ITwitchAPI) {
-        this.core = TwitchAPI;
-    }
+    constructor(private readonly auth: Auth) {}
 
     public async getClips({
         quantity = this.PARAM_QTY,
@@ -85,8 +82,8 @@ class Clips {
         broadcasterId?: string;
         paginator?: string;
     }): Promise<ClipsSearchOnline | null> {
-        await this.core.getToken();
-        const headers = this.core.createHeader();
+        await this.auth.getToken();
+        const headers = this.auth.createHeader();
 
         let url = `${GET_CLIPS}?`;
 
@@ -103,14 +100,14 @@ class Clips {
             headers,
         })
             .then((res) => {
-                this.core.updateRateReset(res.headers['ratelimit-reset']);
+                this.auth.updateRateReset(res.headers['ratelimit-reset']);
 
                 if (res.status === 200) {
                     return res.data;
                 }
 
                 if (res.status === 429) {
-                    throw new Error(`Excess rate limit, will be reset at ${this.core.ratelimit}`);
+                    throw new Error(`Excess rate limit, will be reset at ${this.auth.ratelimit_reset}`);
                 }
 
                 return null;

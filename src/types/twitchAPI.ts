@@ -11,19 +11,4 @@ export type Header = {
     Authorization: string;
 };
 
-export interface ITwitchAPI {
-    ratelimit: Date | undefined;
-
-    /**
-     * Get and update token
-     */
-    getToken(): Promise<void>;
-    /**
-     * Check if the token is valid
-     */
-    checkToken(): Promise<Boolean>;
-    getToken(): Promise<void>;
-    checkToken(): Promise<Boolean>;
-    updateRateReset(rate: string | null): void;
-    createHeader(): Header;
-}
+export interface ITwitchAPI {}

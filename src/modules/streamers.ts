@@ -1,16 +1,13 @@
 import axios from 'axios';
 import { GET_CHANNEL, GET_STREAM } from '../defaults';
-import { ITwitchAPI } from '../types/twitchAPI';
+import { Auth } from '../services/auth';
 import { ChannelSearchName, StreamerByName, StreamerOnline, StreamerSearchOnline } from '../types/streamers';
 
 class Streamers {
-    private core: ITwitchAPI;
     private FETCH_QTY = 100;
     private PARAM_QTY = 20;
 
-    constructor(TwitchAPI: ITwitchAPI) {
-        this.core = TwitchAPI;
-    }
+    constructor(private readonly auth: Auth) {}
 
     public async getStreamersByName({
         name,
@@ -22,8 +19,8 @@ class Streamers {
         paginator?: string;
     }): Promise<ChannelSearchName | null> {
         if (!name) throw new Error('Name is null, pass a value');
-        await this.core.getToken();
-        const headers = this.core.createHeader();
+        await this.auth.getToken();
+        const headers = this.auth.createHeader();
 
         const url = paginator
             ? `${GET_CHANNEL}?first=${quantity}&query=${name}&after=${paginator}`
@@ -35,14 +32,14 @@ class Streamers {
             headers,
         })
             .then((res) => {
-                this.core.updateRateReset(res.headers['ratelimit-reset']);
+                this.auth.updateRateReset(res.headers['ratelimit-reset']);
 
                 if (res.status === 200) {
                     return res.data;
                 }
 
                 if (res.status === 429) {
-                    throw new Error(`Excess rate limit, will be reset at ${this.core.ratelimit}`);
+                    throw new Error(`Excess rate limit, will be reset at ${this.auth.ratelimit_reset}`);
                 }
 
                 return null;
@@ -92,8 +89,8 @@ class Streamers {
         paginator?: string;
     }): Promise<StreamerSearchOnline | null> {
         if (!id) throw new Error('ID is null, pass a value');
-        await this.core.getToken();
-        const headers = this.core.createHeader();
+        await this.auth.getToken();
+        const headers = this.auth.createHeader();
 
         const url = paginator ? `${GET_STREAM}?first=${quantity}&user_id=${id}&after=${paginator}` : `${GET_STREAM}?first=${quantity}&user_id=${id}`;
 
@@ -103,14 +100,14 @@ class Streamers {
             headers,
         })
             .then((res) => {
-                this.core.updateRateReset(res.headers['ratelimit-reset']);
+                this.auth.updateRateReset(res.headers['ratelimit-reset']);
 
                 if (res.status === 200) {
                     return res.data;
                 }
 
                 if (res.status === 429) {
-                    throw new Error(`Excess rate limit, will be reset at ${this.core.ratelimit}`);
+                    throw new Error(`Excess rate limit, will be reset at ${this.auth.ratelimit_reset}`);
                 }
 
                 return null;
