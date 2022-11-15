@@ -1,14 +1,14 @@
-import axios from 'axios';
 import { Token } from '../types/twitchAPI';
 import { twitchAouth2 } from '../defaults';
+import { Http } from '.';
 
 class Auth {
-    private CLIENT_ID: string;
-    private CLIENT_SECRET: string;
+    private readonly CLIENT_ID: string;
+    private readonly CLIENT_SECRET: string;
     private _ratelimit_reset?: Date;
     private token: { access_token: string; expires_in: number; time: number; token_type: string };
 
-    constructor(clientId: string, clientSecret: string) {
+    constructor(private readonly http: Http, clientId: string, clientSecret: string) {
         this.CLIENT_ID = clientId;
         this.CLIENT_SECRET = clientSecret;
         this.token = {
@@ -32,12 +32,13 @@ class Auth {
             grant_type: 'client_credentials',
         };
 
-        const token: Token = await axios({
-            url: twitchAouth2,
-            method: 'post',
-            headers: { 'Content-type': 'application/json' },
-            data: body,
-        }).then((res) => res.data);
+        const token: Token = await this.http
+            .post({
+                url: twitchAouth2,
+                headers: { 'Content-type': 'application/json' },
+                body,
+            })
+            .then((res) => res.data);
 
         this.token.access_token = token.access_token;
         this.token.expires_in = token.expires_in;
