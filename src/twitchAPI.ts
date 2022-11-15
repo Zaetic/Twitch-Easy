@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { GET_CHANNEL, GET_CLIPS, GET_STREAM, twitchAouth2 } from './defaults';
-import Games from './modules/games';
+import { Games } from './modules';
 import {
     ITwitchAPI,
     ChannelSearchName,
