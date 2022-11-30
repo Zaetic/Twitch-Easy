@@ -1,7 +1,8 @@
 /* eslint-disable class-methods-use-this */
 import axios from 'axios';
+import { IHttp } from './http.declaration';
 
-class Http {
+class Http implements IHttp {
     public async post({ url, headers, body }: { url: string; headers: Record<string, string>; body: Record<string, any> }) {
         return axios({
             url,
