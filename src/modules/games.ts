@@ -1,12 +1,13 @@
 import { GET_GAMES, GET_GAMES_TOP } from '../defaults';
 import { Game, GamesSearchOnline } from '../types/games';
-import { Auth, Http } from '../services';
+import { IHttp } from '../services/http/http.declaration';
+import { IAuth } from '../services/auth/auth.declaration';
 
 class Games {
     private FETCH_QTY = 100;
     private PARAM_QTY = 20;
 
-    constructor(private readonly http: Http, private readonly auth: Auth) {}
+    constructor(private readonly http: IHttp, private readonly auth: IAuth) {}
 
     public async getTopGames(quantity: number): Promise<Game[] | null> {
         if (quantity < 1) throw new Error('The parameter "quantity" was malformed: the value must be greater than or equal to 1');

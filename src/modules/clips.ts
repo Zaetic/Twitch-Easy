@@ -1,12 +1,13 @@
 import { GET_CLIPS } from '../defaults';
 import { Clip, ClipsSearchOnline } from '../types/clips';
-import { Auth, Http } from '../services';
+import { IHttp } from '../services/http/http.declaration';
+import { IAuth } from '../services/auth/auth.declaration';
 
 class Clips {
     private FETCH_QTY = 100;
     private PARAM_QTY = 20;
 
-    constructor(private readonly http: Http, private readonly auth: Auth) {}
+    constructor(private readonly http: IHttp, private readonly auth: IAuth) {}
 
     public async getClips({
         quantity = this.PARAM_QTY,
