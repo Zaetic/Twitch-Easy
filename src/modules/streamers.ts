@@ -1,12 +1,13 @@
 import { GET_CHANNEL, GET_STREAM } from '../defaults';
-import { Auth, Http } from '../services';
+import { IAuth } from '../services/auth/auth.declaration';
+import { IHttp } from '../services/http/http.declaration';
 import { ChannelSearchName, StreamerByName, StreamerOnline, StreamerSearchOnline } from '../types/streamers';
 
 class Streamers {
     private FETCH_QTY = 100;
     private PARAM_QTY = 20;
 
-    constructor(private readonly http: Http, private readonly auth: Auth) {}
+    constructor(private readonly http: IHttp, private readonly auth: IAuth) {}
 
     public async getStreamersByName({
         name,
