@@ -1,8 +1,8 @@
-import { Token } from '../types/twitchAPI';
-import { twitchAouth2 } from '../defaults';
-import { Http } from '.';
+import { Token } from '../../types/twitchAPI';
+import { Http } from '..';
+import { IAuth, Headers } from './auth.declaration';
 
-class Auth {
+class AuthMemory implements IAuth {
     private readonly CLIENT_ID: string;
     private readonly CLIENT_SECRET: string;
     private _ratelimit_reset?: Date;
@@ -26,19 +26,11 @@ class Auth {
     public async getToken(): Promise<void> {
         if ((await this.checkToken()) === false) return;
 
-        const body = {
-            client_id: this.CLIENT_ID,
-            client_secret: this.CLIENT_SECRET,
-            grant_type: 'client_credentials',
+        const token: Token = {
+            access_token: '18323984',
+            expires_in: 600000,
+            token_type: 'bearer',
         };
-
-        const token: Token = await this.http
-            .post({
-                url: twitchAouth2,
-                headers: { 'Content-type': 'application/json' },
-                body,
-            })
-            .then((res) => res.data);
 
         this.token.access_token = token.access_token;
         this.token.expires_in = token.expires_in;
@@ -61,7 +53,7 @@ class Auth {
         this._ratelimit_reset = new Date(parseInt(rate, 10) * 1000);
     }
 
-    public createHeader() {
+    public createHeader(): Headers {
         const headers = {
             'Content-Type': 'application/json',
             'Client-ID': this.CLIENT_ID,
@@ -72,4 +64,4 @@ class Auth {
     }
 }
 
-export { Auth };
+export { AuthMemory };
