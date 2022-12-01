@@ -7,9 +7,9 @@ import { IHttp } from '../../../src/services/http/http.declaration';
 describe('Clips', () => {
     const dataMock = [
         {
-            id: 'DeliciousDelightfulPicklesWOOP',
-            url: 'https://clips.twitch.tv/DeliciousDelightfulPicklesWOOP',
-            embed_url: 'https://clips.twitch.tv/embed?clip=DeliciousDelightfulPicklesWOOP',
+            id: 'DeliciousDelightfulPickles',
+            url: 'https://clips.twitch.tv/DeliciousDelightfulPickles',
+            embed_url: 'https://clips.twitch.tv/embed?clip=DeliciousDelightfulPickles',
             broadcaster_id: '10000000',
             broadcaster_name: 'tester',
             creator_id: '20000000',
@@ -25,9 +25,9 @@ describe('Clips', () => {
             vod_offset: null,
         },
         {
-            id: 'AnnoyingDepressedEmuKappaClaus',
-            url: 'https://clips.twitch.tv/AnnoyingDepressedEmuKappaClaus',
-            embed_url: 'https://clips.twitch.tv/embed?clip=AnnoyingDepressedEmuKappaClaus',
+            id: 'AnnoyingDepressedEmuKappa',
+            url: 'https://clips.twitch.tv/AnnoyingDepressedEmuKappa',
+            embed_url: 'https://clips.twitch.tv/embed?clip=AnnoyingDepressedEmuKappa',
             broadcaster_id: '10000001',
             broadcaster_name: 'tester1',
             creator_id: '20000001',
