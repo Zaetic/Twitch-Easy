@@ -47,6 +47,8 @@ describe('Games', () => {
         },
     ];
 
+    const dataMockId = dataMockName;
+
     it('[getTopGames] Should call getTopGames and return a array of 5 top games', async () => {
         const _http: IHttp = new HttpMemory();
         const mock = {
@@ -213,5 +215,89 @@ describe('Games', () => {
         const games = new Games(_http, _auth);
 
         await expect(games.getGameByName('')).rejects.toThrow('Name is null, pass a value');
+    });
+
+    it('[getGameById] Should call getGameById and return a game by name', async () => {
+        const _http: IHttp = new HttpMemory();
+        const mock = {
+            status: 200,
+            statusText: 'OK',
+            headers: {
+                'content-type': 'application/json; charset=utf-8',
+                'ratelimit-limit': '800',
+                'ratelimit-remaining': '799',
+                'ratelimit-reset': '1670004777',
+                'timing-allow-origin': 'https://www.twitch.tv',
+            },
+            data: { data: dataMockId },
+        };
+
+        _http.get = jest.fn().mockImplementationOnce(() => Promise.resolve(mock));
+
+        const _auth: IAuth = new AuthMemory(_http, '', '');
+        const games = new Games(_http, _auth);
+
+        const findGame = await games.getGameById('65876');
+        expect(findGame).not.toBeNaN();
+        expect(findGame).not.toBeNull();
+        expect(typeof findGame).toBe('object');
+        expect(findGame).toEqual(dataMockId[0]);
+    });
+
+    it('[getGameById] Should call getGameById and return a rate limit error', async () => {
+        const _http: IHttp = new HttpMemory();
+        const mock = {
+            status: 429,
+            statusText: 'OK',
+            headers: {
+                'content-type': 'application/json; charset=utf-8',
+                'ratelimit-limit': '800',
+                'ratelimit-remaining': '0',
+                'ratelimit-reset': '1669809433',
+                'timing-allow-origin': 'https://www.twitch.tv',
+            },
+            data: {},
+        };
+
+        _http.get = jest.fn().mockImplementationOnce(() => Promise.resolve(mock));
+
+        const _auth: IAuth = new AuthMemory(_http, '', '');
+        const games = new Games(_http, _auth);
+
+        await expect(games.getGameById('65876')).rejects.toThrow('Excess rate limit, will be reset at');
+    });
+
+    it('[getGameById] Should call getGameById and return a unexpected error', async () => {
+        const _http: IHttp = new HttpMemory();
+        const mock = {
+            status: 500,
+            statusText: 'OK',
+            headers: {
+                'content-type': 'application/json; charset=utf-8',
+                'ratelimit-limit': '800',
+                'ratelimit-remaining': '20',
+                'ratelimit-reset': '1669809433',
+                'timing-allow-origin': 'https://www.twitch.tv',
+            },
+        };
+
+        _http.get = jest.fn().mockImplementationOnce(() => Promise.resolve(mock));
+
+        const _auth: IAuth = new AuthMemory(_http, '', '');
+        const games = new Games(_http, _auth);
+
+        const findGame = await games.getGameById('65876');
+        expect(findGame).not.toEqual(dataMockId[0]);
+        expect(findGame).not.toBeNaN();
+        expect(findGame).toBeNull();
+    });
+
+    it(`[getGameById] Should call getGameById with a string equal '' or null and return a throw`, async () => {
+        const _http: IHttp = new HttpMemory();
+
+        const _auth: IAuth = new AuthMemory(_http, '', '');
+        const games = new Games(_http, _auth);
+
+        await expect(games.getGameById('')).rejects.toThrow('Id is null, pass a value');
     });
 });
