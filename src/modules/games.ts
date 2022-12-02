@@ -158,7 +158,7 @@ class Games {
     }
 
     public async getGameById(id: string): Promise<Game | null> {
-        if (!id) throw new Error('Name is null, pass a value');
+        if (!id) throw new Error('Id is null, pass a value');
 
         let cursor: string | null = null;
         let game: Game | null = null;
