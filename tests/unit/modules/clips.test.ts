@@ -83,7 +83,7 @@ describe('Clips', () => {
                 'ratelimit-reset': '1669809433',
                 'timing-allow-origin': 'https://www.twitch.tv',
             },
-            data: { data: dataMock },
+            data: {},
         };
 
         _http.get = jest.fn().mockImplementationOnce(() => Promise.resolve(mock));
