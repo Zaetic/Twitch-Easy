@@ -21,6 +21,8 @@ class Clips {
         broadcasterId?: string;
     }): Promise<Clip[] | null> {
         if (!id && !gameId && !broadcasterId) throw new Error('id (one or more), broadcasterId, or gameId must be specified');
+        if (quantity <= 0 || quantity >= Number.MAX_SAFE_INTEGER)
+            throw new Error('The parameter "quantity" was malformed: the value must be greater than or equal to 1');
 
         let cursor: string | null = null;
         let clips: Clip[] = [];
