@@ -141,4 +141,14 @@ describe('Clips', () => {
 
         await expect(clips.getClips({})).rejects.toThrow('id (one or more), broadcasterId, or gameId must be specified');
     });
+
+    it('[getClips] Should call getClips with a invalid number and return a throw', async () => {
+        const _http: IHttp = new HttpMemory();
+        const _auth: IAuth = new AuthMemory(_http, '', '');
+        const clips = new Clips(_http, _auth);
+
+        const errorMessage = 'The parameter "quantity" was malformed: the value must be greater than or equal to 1';
+        await expect(clips.getClips({ gameId: '65876', quantity: -1 })).rejects.toThrow(errorMessage);
+        await expect(clips.getClips({ gameId: '65876', quantity: Number.MAX_SAFE_INTEGER })).rejects.toThrow(errorMessage);
+    });
 });
