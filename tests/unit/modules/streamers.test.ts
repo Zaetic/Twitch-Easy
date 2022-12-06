@@ -272,6 +272,17 @@ describe('Streamers', () => {
         await expect(streamers.getStreamersByName({ name: '', quantity: 4 })).rejects.toThrow('Name is null, pass a value');
     });
 
+    it(`[getStreamersByName] Should call getStreamersByName with a invalid number and return a throw`, async () => {
+        const _http: IHttp = new HttpMemory();
+
+        const _auth: IAuth = new AuthMemory(_http, '', '');
+        const streamers = new Streamers(_http, _auth);
+
+        const errorMessage = 'The parameter "quantity" was malformed: the value must be greater than or equal to 1';
+        await expect(streamers.getStreamersByName({ name: 'Test2', quantity: -1 })).rejects.toThrow(errorMessage);
+        await expect(streamers.getStreamersByName({ name: 'Test2', quantity: Number.MAX_SAFE_INTEGER })).rejects.toThrow(errorMessage);
+    });
+
     it('[getStreamersOnline] Should call getStreamersOnline and return a array of 2 online streamers', async () => {
         const _http: IHttp = new HttpMemory();
         const mock = {
@@ -355,6 +366,17 @@ describe('Streamers', () => {
         const streamers = new Streamers(_http, _auth);
 
         await expect(streamers.getStreamersOnline({ id: '', quantity: 2 })).rejects.toThrow('ID is null, pass a value');
+    });
+
+    it(`[getStreamersOnline] Should call getStreamersOnline with a invalid number and return a throw`, async () => {
+        const _http: IHttp = new HttpMemory();
+
+        const _auth: IAuth = new AuthMemory(_http, '', '');
+        const streamers = new Streamers(_http, _auth);
+
+        const errorMessage = 'The parameter "quantity" was malformed: the value must be greater than or equal to 1';
+        await expect(streamers.getStreamersOnline({ id: '111111111', quantity: -1 })).rejects.toThrow(errorMessage);
+        await expect(streamers.getStreamersOnline({ id: '111111111', quantity: Number.MAX_SAFE_INTEGER })).rejects.toThrow(errorMessage);
     });
 
     it('[getStreamerOnline] Should call getStreamerOnline and return a streamer by id', async () => {
