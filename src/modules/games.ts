@@ -10,7 +10,8 @@ class Games {
     constructor(private readonly http: IHttp, private readonly auth: IAuth) {}
 
     public async getTopGames(quantity: number): Promise<Game[] | null> {
-        if (quantity < 1) throw new Error('The parameter "quantity" was malformed: the value must be greater than or equal to 1');
+        if (quantity <= 0 || quantity >= Number.MAX_SAFE_INTEGER)
+            throw new Error('The parameter "quantity" was malformed: the value must be greater than or equal to 1');
 
         let cursor: string | null = null;
         let games: Game[] = [];
