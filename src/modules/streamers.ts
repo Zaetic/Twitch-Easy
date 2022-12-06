@@ -19,6 +19,9 @@ class Streamers {
         paginator?: string;
     }): Promise<ChannelSearchName | null> {
         if (!name) throw new Error('Name is null, pass a value');
+        if (quantity <= 0 || quantity >= Number.MAX_SAFE_INTEGER)
+            throw new Error('The parameter "quantity" was malformed: the value must be greater than or equal to 1');
+
         await this.auth.getToken();
         const headers = this.auth.createHeader();
 
@@ -89,6 +92,9 @@ class Streamers {
         paginator?: string;
     }): Promise<StreamerSearchOnline | null> {
         if (!id) throw new Error('ID is null, pass a value');
+        if (quantity <= 0 || quantity >= Number.MAX_SAFE_INTEGER)
+            throw new Error('The parameter "quantity" was malformed: the value must be greater than or equal to 1');
+
         await this.auth.getToken();
         const headers = this.auth.createHeader();
 
