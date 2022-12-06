@@ -4,8 +4,8 @@ import { IHttp } from '../services/http/http.declaration';
 import { IAuth } from '../services/auth/auth.declaration';
 
 class Games {
-    private FETCH_QTY = 100;
-    private PARAM_QTY = 20;
+    private readonly FETCH_QTY = 100;
+    private readonly PARAM_QTY = 20;
 
     constructor(private readonly http: IHttp, private readonly auth: IAuth) {}
 
