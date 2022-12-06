@@ -4,8 +4,8 @@ import { IHttp } from '../services/http/http.declaration';
 import { ChannelSearchName, StreamerByName, StreamerOnline, StreamerSearchOnline } from '../types/streamers';
 
 class Streamers {
-    private FETCH_QTY = 100;
-    private PARAM_QTY = 20;
+    private readonly FETCH_QTY = 100;
+    private readonly PARAM_QTY = 20;
 
     constructor(private readonly http: IHttp, private readonly auth: IAuth) {}
 
