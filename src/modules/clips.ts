@@ -77,12 +77,14 @@ class Clips {
         gameId,
         broadcasterId,
         paginator,
+        retry = false,
     }: {
         quantity: number;
         id?: string | Array<string>;
         gameId?: string;
         broadcasterId?: string;
         paginator?: string;
+        retry?: boolean;
     }): Promise<ClipsSearchOnline | null> {
         await this.auth.getToken();
         const headers = this.auth.createHeader();
@@ -110,6 +112,11 @@ class Clips {
 
                 if (res.status === 429) {
                     throw new Error(`Excess rate limit, will be reset at ${this.auth.ratelimit_reset}`);
+                }
+
+                if (res.status === 503) {
+                    if (retry) throw new Error(`Service Unavailable`);
+                    return this.fetchClips({ quantity, id, gameId, broadcasterId, paginator, retry: true });
                 }
 
                 return null;
