@@ -151,4 +151,26 @@ describe('Clips', () => {
         await expect(clips.getClips({ gameId: '65876', quantity: -1 })).rejects.toThrow(errorMessage);
         await expect(clips.getClips({ gameId: '65876', quantity: Number.MAX_SAFE_INTEGER })).rejects.toThrow(errorMessage);
     });
+
+    it('[getClips] Should call getClips and return a Service Unavailable error after called 2x', async () => {
+        const _http: IHttp = new HttpMemory();
+        const mock = {
+            status: 503,
+            statusText: 'OK',
+            headers: {
+                'content-type': 'application/json; charset=utf-8',
+                'ratelimit-limit': '800',
+                'ratelimit-remaining': '20',
+                'ratelimit-reset': '1669809433',
+                'timing-allow-origin': 'https://www.twitch.tv',
+            },
+        };
+
+        _http.get = jest.fn().mockImplementation(() => Promise.resolve(mock));
+
+        const _auth: IAuth = new AuthMemory(_http, '', '');
+        const clips = new Clips(_http, _auth);
+
+        await expect(clips.getClips({ gameId: '65876' })).rejects.toThrow('Service Unavailable');
+    });
 });
