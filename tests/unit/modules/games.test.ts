@@ -133,6 +133,28 @@ describe('Games', () => {
         await expect(games.getTopGames(0)).rejects.toThrow('The parameter "quantity" was malformed: the value must be greater than or equal to 1');
     });
 
+    it('[getTopGames] Should call getTopGames and return a Service Unavailable error after called 2x', async () => {
+        const _http: IHttp = new HttpMemory();
+        const mock = {
+            status: 503,
+            statusText: 'OK',
+            headers: {
+                'content-type': 'application/json; charset=utf-8',
+                'ratelimit-limit': '800',
+                'ratelimit-remaining': '20',
+                'ratelimit-reset': '1669809433',
+                'timing-allow-origin': 'https://www.twitch.tv',
+            },
+        };
+
+        _http.get = jest.fn().mockImplementation(() => Promise.resolve(mock));
+
+        const _auth: IAuth = new AuthMemory(_http, '', '');
+        const games = new Games(_http, _auth);
+
+        await expect(games.getTopGames(2)).rejects.toThrow('Service Unavailable');
+    });
+
     it('[getGameByName] Should call getGameByName and return a game by name', async () => {
         const _http: IHttp = new HttpMemory();
         const mock = {
@@ -217,6 +239,28 @@ describe('Games', () => {
         await expect(games.getGameByName('')).rejects.toThrow('Name is null, pass a value');
     });
 
+    it('[getGameByName] Should call getGameByName and return a Service Unavailable error after called 2x', async () => {
+        const _http: IHttp = new HttpMemory();
+        const mock = {
+            status: 503,
+            statusText: 'OK',
+            headers: {
+                'content-type': 'application/json; charset=utf-8',
+                'ratelimit-limit': '800',
+                'ratelimit-remaining': '20',
+                'ratelimit-reset': '1669809433',
+                'timing-allow-origin': 'https://www.twitch.tv',
+            },
+        };
+
+        _http.get = jest.fn().mockImplementation(() => Promise.resolve(mock));
+
+        const _auth: IAuth = new AuthMemory(_http, '', '');
+        const games = new Games(_http, _auth);
+
+        await expect(games.getGameByName('cyberpunk 2077')).rejects.toThrow('Service Unavailable');
+    });
+
     it('[getGameById] Should call getGameById and return a game by name', async () => {
         const _http: IHttp = new HttpMemory();
         const mock = {
@@ -299,5 +343,27 @@ describe('Games', () => {
         const games = new Games(_http, _auth);
 
         await expect(games.getGameById('')).rejects.toThrow('Id is null, pass a value');
+    });
+
+    it('[getGameById] Should call getGameById and return a Service Unavailable error after called 2x', async () => {
+        const _http: IHttp = new HttpMemory();
+        const mock = {
+            status: 503,
+            statusText: 'OK',
+            headers: {
+                'content-type': 'application/json; charset=utf-8',
+                'ratelimit-limit': '800',
+                'ratelimit-remaining': '20',
+                'ratelimit-reset': '1669809433',
+                'timing-allow-origin': 'https://www.twitch.tv',
+            },
+        };
+
+        _http.get = jest.fn().mockImplementation(() => Promise.resolve(mock));
+
+        const _auth: IAuth = new AuthMemory(_http, '', '');
+        const games = new Games(_http, _auth);
+
+        await expect(games.getGameById('65876')).rejects.toThrow('Service Unavailable');
     });
 });
