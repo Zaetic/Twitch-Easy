@@ -13,10 +13,12 @@ class Streamers {
         name,
         quantity = this.PARAM_QTY,
         paginator,
+        retry = false,
     }: {
         name: string;
         quantity: number;
         paginator?: string;
+        retry?: boolean;
     }): Promise<ChannelSearchName | null> {
         if (!name) throw new Error('Name is null, pass a value');
         if (quantity <= 0 || quantity >= Number.MAX_SAFE_INTEGER)
@@ -43,6 +45,11 @@ class Streamers {
 
                 if (res.status === 429) {
                     throw new Error(`Excess rate limit, will be reset at ${this.auth.ratelimit_reset}`);
+                }
+
+                if (res.status === 503) {
+                    if (retry) throw new Error(`Service Unavailable`);
+                    return this.getStreamersByName({ name, quantity, paginator, retry: true });
                 }
 
                 return null;
@@ -86,10 +93,12 @@ class Streamers {
         id,
         quantity = this.PARAM_QTY,
         paginator,
+        retry = false,
     }: {
         id: string;
         quantity: number;
         paginator?: string;
+        retry?: boolean;
     }): Promise<StreamerSearchOnline | null> {
         if (!id) throw new Error('ID is null, pass a value');
         if (quantity <= 0 || quantity >= Number.MAX_SAFE_INTEGER)
@@ -114,6 +123,11 @@ class Streamers {
 
                 if (res.status === 429) {
                     throw new Error(`Excess rate limit, will be reset at ${this.auth.ratelimit_reset}`);
+                }
+
+                if (res.status === 503) {
+                    if (retry) throw new Error(`Service Unavailable`);
+                    return this.getStreamersOnline({ id, quantity, paginator, retry: true });
                 }
 
                 return null;
