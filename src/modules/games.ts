@@ -51,7 +51,7 @@ class Games {
     private async fetchTopGames({
         quantity = this.PARAM_QTY,
         paginator,
-        retry = false,
+        retry = true,
     }: {
         quantity: number;
         paginator?: string;
@@ -79,8 +79,8 @@ class Games {
                 }
 
                 if (res.status === 503) {
-                    if (retry) throw new Error(`Service Unavailable`);
-                    return this.fetchTopGames({ quantity, paginator, retry: true });
+                    if (!retry) throw new Error(`Service Unavailable`);
+                    return this.fetchTopGames({ quantity, paginator, retry: false });
                 }
 
                 return null;
@@ -97,7 +97,7 @@ class Games {
         name,
         id,
         paginator,
-        retry = false,
+        retry = true,
     }: {
         quantity: number;
         name?: string;
@@ -131,8 +131,8 @@ class Games {
                 }
 
                 if (res.status === 503) {
-                    if (retry) throw new Error(`Service Unavailable`);
-                    return this.fetchGames({ name, id, quantity, paginator, retry: true });
+                    if (!retry) throw new Error(`Service Unavailable`);
+                    return this.fetchGames({ name, id, quantity, paginator, retry: false });
                 }
 
                 return null;
