@@ -51,9 +51,11 @@ class Games {
     private async fetchTopGames({
         quantity = this.PARAM_QTY,
         paginator,
+        retry = false,
     }: {
         quantity: number;
         paginator?: string;
+        retry?: boolean;
     }): Promise<GamesSearchOnline | null> {
         await this.auth.getToken();
         const headers = this.auth.createHeader();
@@ -76,6 +78,11 @@ class Games {
                     throw new Error(`Excess rate limit, will be reset at ${this.auth.ratelimit_reset}`);
                 }
 
+                if (res.status === 503) {
+                    if (retry) throw new Error(`Service Unavailable`);
+                    return this.fetchTopGames({ quantity, paginator, retry: true });
+                }
+
                 return null;
             })
             .catch((err: Error) => {
@@ -90,11 +97,13 @@ class Games {
         name,
         id,
         paginator,
+        retry = false,
     }: {
         quantity: number;
         name?: string;
         id?: string;
         paginator?: string;
+        retry?: boolean;
     }): Promise<GamesSearchOnline | null> {
         await this.auth.getToken();
         const headers = this.auth.createHeader();
@@ -119,6 +128,11 @@ class Games {
 
                 if (res.status === 429) {
                     throw new Error(`Excess rate limit, will be reset at ${this.auth.ratelimit_reset}`);
+                }
+
+                if (res.status === 503) {
+                    if (retry) throw new Error(`Service Unavailable`);
+                    return this.fetchGames({ name, id, quantity, paginator, retry: true });
                 }
 
                 return null;
