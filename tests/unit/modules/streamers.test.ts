@@ -283,6 +283,28 @@ describe('Streamers', () => {
         await expect(streamers.getStreamersByName({ name: 'Test2', quantity: Number.MAX_SAFE_INTEGER })).rejects.toThrow(errorMessage);
     });
 
+    it('[getStreamersByName] Should call getStreamersByName and return a Service Unavailable error after called 2x', async () => {
+        const _http: IHttp = new HttpMemory();
+        const mock = {
+            status: 503,
+            statusText: 'OK',
+            headers: {
+                'content-type': 'application/json; charset=utf-8',
+                'ratelimit-limit': '800',
+                'ratelimit-remaining': '20',
+                'ratelimit-reset': '1669809433',
+                'timing-allow-origin': 'https://www.twitch.tv',
+            },
+        };
+
+        _http.get = jest.fn().mockImplementation(() => Promise.resolve(mock));
+
+        const _auth: IAuth = new AuthMemory(_http, '', '');
+        const streamers = new Streamers(_http, _auth);
+
+        await expect(streamers.getStreamersByName({ name: 'Test2', quantity: 10 })).rejects.toThrow('Service Unavailable');
+    });
+
     it('[getStreamersOnline] Should call getStreamersOnline and return a array of 2 online streamers', async () => {
         const _http: IHttp = new HttpMemory();
         const mock = {
@@ -377,6 +399,28 @@ describe('Streamers', () => {
         const errorMessage = 'The parameter "quantity" was malformed: the value must be greater than or equal to 1';
         await expect(streamers.getStreamersOnline({ id: '111111111', quantity: -1 })).rejects.toThrow(errorMessage);
         await expect(streamers.getStreamersOnline({ id: '111111111', quantity: Number.MAX_SAFE_INTEGER })).rejects.toThrow(errorMessage);
+    });
+
+    it('[getStreamersOnline] Should call getStreamersOnline and return a Service Unavailable error after called 2x', async () => {
+        const _http: IHttp = new HttpMemory();
+        const mock = {
+            status: 503,
+            statusText: 'OK',
+            headers: {
+                'content-type': 'application/json; charset=utf-8',
+                'ratelimit-limit': '800',
+                'ratelimit-remaining': '20',
+                'ratelimit-reset': '1669809433',
+                'timing-allow-origin': 'https://www.twitch.tv',
+            },
+        };
+
+        _http.get = jest.fn().mockImplementation(() => Promise.resolve(mock));
+
+        const _auth: IAuth = new AuthMemory(_http, '', '');
+        const streamers = new Streamers(_http, _auth);
+
+        await expect(streamers.getStreamersOnline({ id: '111111111', quantity: 10 })).rejects.toThrow('Service Unavailable');
     });
 
     it('[getStreamerOnline] Should call getStreamerOnline and return a streamer by id', async () => {
