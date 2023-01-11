@@ -13,7 +13,7 @@ class Streamers {
         name,
         quantity = this.PARAM_QTY,
         paginator,
-        retry = false,
+        retry = true,
     }: {
         name: string;
         quantity: number;
@@ -48,8 +48,8 @@ class Streamers {
                 }
 
                 if (res.status === 503) {
-                    if (retry) throw new Error(`Service Unavailable`);
-                    return this.getStreamersByName({ name, quantity, paginator, retry: true });
+                    if (!retry) throw new Error(`Service Unavailable`);
+                    return this.getStreamersByName({ name, quantity, paginator, retry: false });
                 }
 
                 return null;
@@ -93,7 +93,7 @@ class Streamers {
         id,
         quantity = this.PARAM_QTY,
         paginator,
-        retry = false,
+        retry = true,
     }: {
         id: string;
         quantity: number;
@@ -126,8 +126,8 @@ class Streamers {
                 }
 
                 if (res.status === 503) {
-                    if (retry) throw new Error(`Service Unavailable`);
-                    return this.getStreamersOnline({ id, quantity, paginator, retry: true });
+                    if (!retry) throw new Error(`Service Unavailable`);
+                    return this.getStreamersOnline({ id, quantity, paginator, retry: false });
                 }
 
                 return null;

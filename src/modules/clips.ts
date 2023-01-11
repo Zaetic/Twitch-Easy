@@ -77,7 +77,7 @@ class Clips {
         gameId,
         broadcasterId,
         paginator,
-        retry = false,
+        retry = true,
     }: {
         quantity: number;
         id?: string | Array<string>;
@@ -115,8 +115,8 @@ class Clips {
                 }
 
                 if (res.status === 503) {
-                    if (retry) throw new Error(`Service Unavailable`);
-                    return this.fetchClips({ quantity, id, gameId, broadcasterId, paginator, retry: true });
+                    if (!retry) throw new Error(`Service Unavailable`);
+                    return this.fetchClips({ quantity, id, gameId, broadcasterId, paginator, retry: false });
                 }
 
                 return null;
