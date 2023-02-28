@@ -12,11 +12,13 @@ class HttpMemory implements IHttp {
         headers: Record<string, string>;
         body: Record<string, any>;
     }): Promise<AxiosResponse<any, any>> {
-        return { data: {}, headers: {}, status: 200, statusText: 'ok', config: {} };
+        const config: any = { headers: {} };
+        return { data: {}, headers: {}, status: 200, statusText: 'ok', config };
     }
 
     public async get({ url, headers }: { url: string; headers: Record<string, string> }): Promise<AxiosResponse<any, any>> {
-        return { data: {}, headers: {}, status: 200, statusText: 'ok', config: {} };
+        const config: any = { headers: {} };
+        return { data: {}, headers: {}, status: 200, statusText: 'ok', config };
     }
 }
 
