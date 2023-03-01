@@ -4,6 +4,12 @@ export type Headers = {
     Authorization: string;
 };
 
+export type Token = {
+    access_token: string;
+    expires_in: number;
+    token_type: string;
+};
+
 export interface IAuth {
     get ratelimit_reset(): Date | undefined;
     /**
