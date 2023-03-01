@@ -1,14 +1,7 @@
-/* eslint-disable no-unused-vars */
-export type Token = {
-    access_token: string;
-    expires_in: number;
-    token_type: string;
-};
+import { Clips, Games, Streamers } from '../modules';
 
-export type Header = {
-    'Content-Type': string;
-    'Client-ID': string;
-    Authorization: string;
-};
-
-export interface ITwitchAPI {}
+export interface ITwitchAPI {
+    get games(): Games;
+    get streamers(): Streamers;
+    get clips(): Clips;
+}
