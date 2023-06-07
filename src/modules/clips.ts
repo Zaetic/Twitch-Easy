@@ -1,5 +1,5 @@
+import { Clip, ClipsSearchOnline, FetchClipsParams, GetClipsParams } from '../types/clips';
 import { GET_CLIPS } from '../defaults';
-import { Clip, ClipsSearchOnline } from '../types/clips';
 import { IHttp } from '../services/http/http.declaration';
 import { IAuth } from '../services/auth/auth.declaration';
 
@@ -9,17 +9,7 @@ class Clips {
 
     constructor(private readonly http: IHttp, private readonly auth: IAuth) {}
 
-    public async getClips({
-        quantity = this.PARAM_QTY,
-        id,
-        gameId,
-        broadcasterId,
-    }: {
-        quantity?: number;
-        id?: string | Array<string>;
-        gameId?: string;
-        broadcasterId?: string;
-    }): Promise<Clip[] | null> {
+    public async getClips({ quantity = this.PARAM_QTY, id, gameId, broadcasterId }: GetClipsParams): Promise<Clip[] | null> {
         if (!id && !gameId && !broadcasterId) throw new Error('id (one or more), broadcasterId, or gameId must be specified');
         if (quantity <= 0 || quantity >= Number.MAX_SAFE_INTEGER)
             throw new Error('The parameter "quantity" was malformed: the value must be greater than or equal to 1');
@@ -78,14 +68,7 @@ class Clips {
         broadcasterId,
         paginator,
         retry = true,
-    }: {
-        quantity: number;
-        id?: string | Array<string>;
-        gameId?: string;
-        broadcasterId?: string;
-        paginator?: string;
-        retry?: boolean;
-    }): Promise<ClipsSearchOnline | null> {
+    }: FetchClipsParams): Promise<ClipsSearchOnline | null> {
         await this.auth.getToken();
         const headers = this.auth.createHeader();
 

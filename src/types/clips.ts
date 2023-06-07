@@ -23,6 +23,22 @@ export type ClipsSearchOnline = {
     };
 };
 
+export type GetClipsParams = {
+    quantity?: number;
+    id?: string | Array<string>;
+    gameId?: string;
+    broadcasterId?: string;
+};
+
+export type FetchClipsParams = {
+    quantity: number;
+    id?: string | Array<string>;
+    gameId?: string;
+    broadcasterId?: string;
+    paginator?: string;
+    retry?: boolean;
+};
+
 export interface IClips {
     /**
      * Get clips by id, gameid, broadcasterId.
@@ -32,15 +48,5 @@ export interface IClips {
      * @param broadcasterId - Optional
      * @param quantity - Optional
      */
-    getClips({
-        quantity,
-        id,
-        gameId,
-        broadcasterId,
-    }: {
-        quantity?: number;
-        id?: string | Array<string>;
-        gameId?: string;
-        broadcasterId?: string;
-    }): Promise<Clip[] | null>;
+    getClips({ quantity, id, gameId, broadcasterId }: GetClipsParams): Promise<Clip[] | null>;
 }
