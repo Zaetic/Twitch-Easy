@@ -43,6 +43,20 @@ export type StreamerSearchOnline = {
     };
 };
 
+export type getStreamersByNameParams = {
+    name: string;
+    quantity: number;
+    paginator?: string;
+    retry?: boolean;
+};
+
+export type getStreamersOnlineParams = {
+    id: string;
+    quantity: number;
+    paginator?: string;
+    retry?: boolean;
+};
+
 export interface IStreamers {
     /**
      * Get a streamer by the name
@@ -55,7 +69,7 @@ export interface IStreamers {
      * @param quantity -
      * @param paginator - Optional
      */
-    getStreamersByName({ name, quantity, paginator }: { name: string; quantity: number; paginator?: string }): Promise<ChannelSearchName | null>;
+    getStreamersByName({ name, quantity, paginator }: getStreamersByNameParams): Promise<ChannelSearchName | null>;
     /**
      * Get a online streamer by the id
      * @param id -
@@ -67,5 +81,5 @@ export interface IStreamers {
      * @param quantity -
      * @param paginator - Optional
      */
-    getStreamersOnline({ id, quantity, paginator }: { id: string; quantity: number; paginator?: string }): Promise<StreamerSearchOnline | null>;
+    getStreamersOnline({ id, quantity, paginator }: getStreamersOnlineParams): Promise<StreamerSearchOnline | null>;
 }

@@ -1,7 +1,14 @@
 import { GET_CHANNEL, GET_STREAM } from '../defaults';
 import { IAuth } from '../services/auth/auth.declaration';
 import { IHttp } from '../services/http/http.declaration';
-import { ChannelSearchName, StreamerByName, StreamerOnline, StreamerSearchOnline } from '../types/streamers';
+import {
+    ChannelSearchName,
+    StreamerByName,
+    StreamerOnline,
+    StreamerSearchOnline,
+    getStreamersByNameParams,
+    getStreamersOnlineParams,
+} from '../types/streamers';
 
 class Streamers {
     private readonly FETCH_QTY = 100;
@@ -14,12 +21,7 @@ class Streamers {
         quantity = this.PARAM_QTY,
         paginator,
         retry = true,
-    }: {
-        name: string;
-        quantity: number;
-        paginator?: string;
-        retry?: boolean;
-    }): Promise<ChannelSearchName | null> {
+    }: getStreamersByNameParams): Promise<ChannelSearchName | null> {
         if (!name) throw new Error('Name is null, pass a value');
         if (quantity <= 0 || quantity >= Number.MAX_SAFE_INTEGER)
             throw new Error('The parameter "quantity" was malformed: the value must be greater than or equal to 1');
@@ -94,12 +96,7 @@ class Streamers {
         quantity = this.PARAM_QTY,
         paginator,
         retry = true,
-    }: {
-        id: string;
-        quantity: number;
-        paginator?: string;
-        retry?: boolean;
-    }): Promise<StreamerSearchOnline | null> {
+    }: getStreamersOnlineParams): Promise<StreamerSearchOnline | null> {
         if (!id) throw new Error('ID is null, pass a value');
         if (quantity <= 0 || quantity >= Number.MAX_SAFE_INTEGER)
             throw new Error('The parameter "quantity" was malformed: the value must be greater than or equal to 1');
