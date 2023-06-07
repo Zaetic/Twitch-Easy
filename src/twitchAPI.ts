@@ -9,7 +9,7 @@ export default class TwitchAPI implements ITwitchAPI {
     private readonly _auth: Auth;
     private readonly _http: Http;
 
-    constructor(clientId: string, clientSecret: string) {
+    constructor(private readonly clientId: string, private readonly clientSecret: string) {
         this._http = new Http();
         this._auth = new Auth(this._http, clientId, clientSecret);
         this._streamers = new Streamers(this._http, this._auth);

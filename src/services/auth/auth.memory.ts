@@ -1,6 +1,5 @@
-import { Token } from '../../types/twitchAPI';
 import { Http } from '..';
-import { IAuth, Headers } from './auth.declaration';
+import { IAuth, Headers, Token } from './auth.declaration';
 
 class AuthMemory implements IAuth {
     private readonly CLIENT_ID: string;
