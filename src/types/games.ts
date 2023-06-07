@@ -11,6 +11,20 @@ export type GamesSearchOnline = {
     };
 };
 
+export type FetchTopGamesParams = {
+    quantity: number;
+    paginator?: string;
+    retry?: boolean;
+};
+
+export type FetchGamesParams = {
+    quantity: number;
+    name?: string;
+    id?: string;
+    paginator?: string;
+    retry?: boolean;
+};
+
 export interface IGames {
     /**
      * Get top games of twitch

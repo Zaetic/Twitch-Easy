@@ -1,5 +1,5 @@
 import { GET_GAMES, GET_GAMES_TOP } from '../defaults';
-import { Game, GamesSearchOnline } from '../types/games';
+import { FetchGamesParams, FetchTopGamesParams, Game, GamesSearchOnline } from '../types/games';
 import { IHttp } from '../services/http/http.declaration';
 import { IAuth } from '../services/auth/auth.declaration';
 
@@ -48,15 +48,7 @@ class Games {
         return games;
     }
 
-    private async fetchTopGames({
-        quantity = this.PARAM_QTY,
-        paginator,
-        retry = true,
-    }: {
-        quantity: number;
-        paginator?: string;
-        retry?: boolean;
-    }): Promise<GamesSearchOnline | null> {
+    private async fetchTopGames({ quantity = this.PARAM_QTY, paginator, retry = true }: FetchTopGamesParams): Promise<GamesSearchOnline | null> {
         await this.auth.getToken();
         const headers = this.auth.createHeader();
 
@@ -92,19 +84,7 @@ class Games {
         return games;
     }
 
-    private async fetchGames({
-        quantity = this.PARAM_QTY,
-        name,
-        id,
-        paginator,
-        retry = true,
-    }: {
-        quantity: number;
-        name?: string;
-        id?: string;
-        paginator?: string;
-        retry?: boolean;
-    }): Promise<GamesSearchOnline | null> {
+    private async fetchGames({ quantity = this.PARAM_QTY, name, id, paginator, retry = true }: FetchGamesParams): Promise<GamesSearchOnline | null> {
         await this.auth.getToken();
         const headers = this.auth.createHeader();
 
