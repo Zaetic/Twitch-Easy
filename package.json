@@ -7,6 +7,7 @@
   "scripts": {
     "pack": "npm pack",
     "test": "jest",
+    "clear": "rm -r ./lib ./node_modules",
     "build": "tsc -p .",
     "start": "tsc && node ."
   },
