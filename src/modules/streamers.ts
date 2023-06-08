@@ -1,6 +1,5 @@
 import { GET_CHANNEL, GET_STREAM } from '../defaults';
-import { IAuth } from '../services/auth/auth.declaration';
-import { IHttp } from '../services/http/http.declaration';
+import { IAuth, IHttp } from '../services';
 import {
     ChannelSearchName,
     IStreamers,
