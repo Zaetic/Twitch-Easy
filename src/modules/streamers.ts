@@ -3,6 +3,7 @@ import { IAuth } from '../services/auth/auth.declaration';
 import { IHttp } from '../services/http/http.declaration';
 import {
     ChannelSearchName,
+    IStreamers,
     StreamerByName,
     StreamerOnline,
     StreamerSearchOnline,
@@ -10,7 +11,7 @@ import {
     getStreamersOnlineParams,
 } from '../types/streamers';
 
-class Streamers {
+class Streamers implements IStreamers {
     private readonly FETCH_QTY = 100;
     private readonly PARAM_QTY = 20;
 

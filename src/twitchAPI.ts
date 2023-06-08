@@ -1,11 +1,12 @@
+import { IClips, IGames, IStreamers } from './types';
 import { Clips, Games, Streamers } from './modules';
 import { ITwitchAPI } from './types/twitchAPI';
 import { Auth, Http } from './services';
 
 export default class TwitchAPI implements ITwitchAPI {
-    private readonly _games: Games;
-    private readonly _streamers: Streamers;
-    private readonly _clips: Clips;
+    private readonly _games: IGames;
+    private readonly _streamers: IStreamers;
+    private readonly _clips: IClips;
     private readonly _auth: Auth;
     private readonly _http: Http;
 
@@ -17,15 +18,15 @@ export default class TwitchAPI implements ITwitchAPI {
         this._games = new Games(this._http, this._auth);
     }
 
-    public get games(): Games {
+    public get games(): IGames {
         return this._games;
     }
 
-    public get streamers(): Streamers {
+    public get streamers(): IStreamers {
         return this._streamers;
     }
 
-    public get clips(): Clips {
+    public get clips(): IClips {
         return this._clips;
     }
 }

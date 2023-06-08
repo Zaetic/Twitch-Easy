@@ -1,16 +1,16 @@
-import { Clips, Games, Streamers } from '../modules';
+import { IClips, IGames, IStreamers } from '.';
 
 export interface ITwitchAPI {
     /**
      * Get games module
      */
-    get games(): Games;
+    get games(): IGames;
     /**
      * Get streamers module
      */
-    get streamers(): Streamers;
+    get streamers(): IStreamers;
     /**
      * Get clips module
      */
-    get clips(): Clips;
+    get clips(): IClips;
 }

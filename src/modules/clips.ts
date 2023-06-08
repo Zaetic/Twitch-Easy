@@ -1,9 +1,9 @@
-import { Clip, ClipsSearchOnline, FetchClipsParams, GetClipsParams } from '../types/clips';
+import { Clip, ClipsSearchOnline, FetchClipsParams, GetClipsParams, IClips } from '../types/clips';
 import { GET_CLIPS } from '../defaults';
 import { IHttp } from '../services/http/http.declaration';
 import { IAuth } from '../services/auth/auth.declaration';
 
-class Clips {
+class Clips implements IClips {
     private readonly FETCH_QTY = 100;
     private readonly PARAM_QTY = 20;
 
