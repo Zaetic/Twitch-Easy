@@ -1,7 +1,6 @@
 import { GET_GAMES, GET_GAMES_TOP } from '../defaults';
 import { FetchGamesParams, FetchTopGamesParams, Game, GamesSearchOnline, IGames } from '../types/games';
-import { IHttp } from '../services/http/http.declaration';
-import { IAuth } from '../services/auth/auth.declaration';
+import { IAuth, IHttp } from '../services';
 
 class Games implements IGames {
     private readonly FETCH_QTY = 100;

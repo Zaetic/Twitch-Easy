@@ -1,8 +1,5 @@
 import { Games } from '../../../src/modules';
-import { AuthMemory } from '../../../src/services/auth/auth.memory';
-import { HttpMemory } from '../../../src/services/http/http.memory';
-import { IAuth } from '../../../src/services/auth/auth.declaration';
-import { IHttp } from '../../../src/services/http/http.declaration';
+import { AuthMemory, HttpMemory, IAuth, IHttp } from '../../../src/services';
 
 describe('Games', () => {
     const dataMockTop = [

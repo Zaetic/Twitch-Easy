@@ -1,5 +1,5 @@
 import { twitchAouth2 } from '../../defaults';
-import { Http } from '..';
+import { IHttp } from '../index';
 import { IAuth, Headers, Token } from './auth.declaration';
 
 class Auth implements IAuth {
@@ -8,7 +8,7 @@ class Auth implements IAuth {
     private _ratelimit_reset?: Date;
     private token: { access_token: string; expires_in: number; time: number; token_type: string };
 
-    constructor(private readonly http: Http, private readonly clientId: string, private readonly clientSecret: string) {
+    constructor(private readonly http: IHttp, private readonly clientId: string, private readonly clientSecret: string) {
         this.CLIENT_ID = clientId;
         this.CLIENT_SECRET = clientSecret;
         this.token = {
