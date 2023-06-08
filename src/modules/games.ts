@@ -1,9 +1,9 @@
 import { GET_GAMES, GET_GAMES_TOP } from '../defaults';
-import { FetchGamesParams, FetchTopGamesParams, Game, GamesSearchOnline } from '../types/games';
+import { FetchGamesParams, FetchTopGamesParams, Game, GamesSearchOnline, IGames } from '../types/games';
 import { IHttp } from '../services/http/http.declaration';
 import { IAuth } from '../services/auth/auth.declaration';
 
-class Games {
+class Games implements IGames {
     private readonly FETCH_QTY = 100;
     private readonly PARAM_QTY = 20;
 
