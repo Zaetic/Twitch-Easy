@@ -7,7 +7,7 @@
   "scripts": {
     "pack": "npm pack",
     "test": "jest",
-    "clear": "rm -r ./lib ./node_modules",
+    "clear": "rm -r ./lib ./node_modules package-lock.json",
     "build": "tsc -p .",
     "start": "tsc && node ."
   },
