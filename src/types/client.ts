@@ -1,6 +1,6 @@
 import { IClips, IGames, IStreamers } from '.';
 
-export interface ITwitchAPI {
+export interface IClient {
     /**
      * Get games module
      */
