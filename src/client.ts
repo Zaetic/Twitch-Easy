@@ -1,9 +1,9 @@
 import { IClips, IGames, IStreamers } from './types';
 import { Clips, Games, Streamers } from './modules';
-import { ITwitchAPI } from './types/twitchAPI';
+import { IClient } from './types/client';
 import { Auth, Http, IAuth, IHttp } from './services';
 
-export default class TwitchAPI implements ITwitchAPI {
+class Client implements IClient {
     private readonly _games: IGames;
     private readonly _streamers: IStreamers;
     private readonly _clips: IClips;
@@ -30,3 +30,5 @@ export default class TwitchAPI implements ITwitchAPI {
         return this._clips;
     }
 }
+
+export { Client };
