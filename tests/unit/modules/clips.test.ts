@@ -1,5 +1,7 @@
 import { Clips } from '../../../src/modules';
-import { AuthMemory, HttpMemory, IAuth, IHttp } from '../../../src/services';
+import { IAuth, IHttp } from '../../../src/services';
+import { AuthMemory } from '../../../src/services/auth/auth.memory';
+import { HttpMemory } from '../../../src/services/http/http.memory';
 
 describe('Clips', () => {
     const dataMock = [
