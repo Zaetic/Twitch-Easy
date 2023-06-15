@@ -6,3 +6,6 @@ node_modules/
 package-lock.json
 images/
 .prettierrc.json
+tests/
+.editorconfig
+jest.config.ts
