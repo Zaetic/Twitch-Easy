@@ -1,3 +1,4 @@
-import TwitchAPI from './twitchAPI';
+import { Client } from './client';
 
-export = TwitchAPI;
+export { Client };
+export * from './types';
